@@ -1,0 +1,566 @@
+// // import React, { useState, useEffect, useRef } from "react";
+// // import { useProduct } from "../hooks/useProduct";
+// // import { useNavigate } from "react-router-dom";
+
+// // const CreateProduct = () => {
+// //   const { handleCreateProduct } = useProduct();
+// //   const navigate = useNavigate();
+
+// //   // Form Fields State
+// //   const [title, setTitle] = useState("");
+// //   const [description, setDescription] = useState("");
+// //   const [priceAmount, setPriceAmount] = useState("");
+// //   const [priceCurrency, setPriceCurrency] = useState("USD");
+  
+// //   // 7 Image Slots State: [Hero, Slot2, Slot3, Slot4, Slot5, Slot6, Slot7]
+// //   // Each index contains: null or { file: File, preview: string }
+// //   const [images, setImages] = useState(Array(7).fill(null));
+// //   const [activeSlot, setActiveSlot] = useState(null);
+// //   const fileInputRef = useRef(null);
+
+// //   // Status/Notifications State
+// //   const [status, setStatus] = useState({ type: null, message: "" });
+// //   const [loading, setLoading] = useState(false);
+
+// //   // Subtle background mouse follow effect
+// //   useEffect(() => {
+// //     const handleMouseMove = (e) => {
+// //       const x = (e.clientX / window.innerWidth) * 100;
+// //       const y = (e.clientY / window.innerHeight) * 100;
+// //       document.body.style.backgroundImage = `radial-gradient(circle at ${x}% ${y}%, rgba(229, 197, 57, 0.03) 0%, transparent 50%)`;
+// //     };
+// //     window.addEventListener("mousemove", handleMouseMove);
+// //     return () => window.removeEventListener("mousemove", handleMouseMove);
+// //   }, []);
+
+// //   // Trigger file selection for a specific slot index
+// //   const triggerFileInput = (index) => {
+// //     setActiveSlot(index);
+// //     if (fileInputRef.current) {
+// //       fileInputRef.current.click();
+// //     }
+// //   };
+
+// //   // Handle image file selection
+// //   const handleFileChange = (e) => {
+// //     const file = e.target.files[0];
+// //     if (file && activeSlot !== null) {
+// //       // Validate file is an image
+// //       if (!file.type.startsWith("image/")) {
+// //         setStatus({ type: "error", message: "Please upload an image file." });
+// //         return;
+// //       }
+      
+// //       const newImages = [...images];
+// //       // Revoke old object URL if exists to avoid memory leaks
+// //       if (newImages[activeSlot]) {
+// //         URL.revokeObjectURL(newImages[activeSlot].preview);
+// //       }
+      
+// //       newImages[activeSlot] = {
+// //         file,
+// //         preview: URL.createObjectURL(file),
+// //       };
+      
+// //       setImages(newImages);
+// //       setActiveSlot(null);
+// //       e.target.value = ""; // Reset input so same file can be chosen again
+// //     }
+// //   };
+
+// //   // Remove image from a specific slot
+// //   const removeImage = (e, index) => {
+// //     e.stopPropagation(); // Stop click from triggering parent file select
+// //     const newImages = [...images];
+// //     if (newImages[index]) {
+// //       URL.revokeObjectURL(newImages[index].preview);
+// //       newImages[index] = null;
+// //       setImages(newImages);
+// //     }
+// //   };
+
+// //   // Handle form submission
+// //   const handleSubmit = async (e) => {
+// //     e.preventDefault();
+// //     setStatus({ type: null, message: "" });
+
+// //     // Client-side validations
+// //     if (!title.trim()) {
+// //       setStatus({ type: "error", message: "Product title is required." });
+// //       return;
+// //     }
+// //     if (!description.trim()) {
+// //       setStatus({ type: "error", message: "Product description is required." });
+// //       return;
+// //     }
+// //     if (!priceAmount || parseFloat(priceAmount) <= 0) {
+// //       setStatus({ type: "error", message: "Please enter a valid price amount." });
+// //       return;
+// //     }
+
+// //     const uploadedCount = images.filter((img) => img !== null).length;
+// //     if (uploadedCount === 0) {
+// //       setStatus({ type: "error", message: "Please upload at least one product image." });
+// //       return;
+// //     }
+
+// //     setLoading(true);
+// //     try {
+// //       const formData = new FormData();
+// //       formData.append("title", title);
+// //       formData.append("description", description);
+// //       formData.append("priceAmount", priceAmount);
+// //       formData.append("priceCurrency", priceCurrency);
+
+// //       // Append files to FormData under the key "images"
+// //       images.forEach((img) => {
+// //         if (img && img.file) {
+// //           formData.append("images", img.file);
+// //         }
+// //       });
+
+// //       await handleCreateProduct(formData);
+      
+// //       setStatus({
+// //         type: "success",
+// //         message: "Product created successfully! Redirecting...",
+// //       });
+
+// //       // Clear fields
+// //       setTitle("");
+// //       setDescription("");
+// //       setPriceAmount("");
+// //       setPriceCurrency("USD");
+      
+// //       // Revoke preview URLs
+// //       images.forEach((img) => {
+// //         if (img) URL.revokeObjectURL(img.preview);
+// //       });
+// //       setImages(Array(7).fill(null));
+
+// //       // Navigate back to seller home or product catalog
+// //       setTimeout(() => {
+// //         navigate("/");
+// //       }, 2000);
+
+// //     } catch (error) {
+// //       console.error(error);
+// //       const errMsg = error.response?.data?.message || error.message || "Failed to create product.";
+// //       setStatus({ type: "error", message: errMsg });
+// //     } finally {
+// //       setLoading(false);
+// //     }
+// //   };
+
+// //   return (
+// //     <div className="bg-surface text-on-surface min-h-screen selection:bg-secondary selection:text-on-secondary font-sans relative overflow-x-hidden pb-20">
+      
+// //       {/* Hidden File Input */}
+// //       <input
+// //         type="file"
+// //         ref={fileInputRef}
+// //         onChange={handleFileChange}
+// //         accept="image/*"
+// //         className="hidden"
+// //       />
+
+// //       {/* TopAppBar */}
+// //       <header className="fixed top-0 z-50 w-full bg-surface/90 backdrop-blur-2xl border-b border-outline-variant/10">
+// //         <div className="flex justify-between items-center w-full px-8 py-4 max-w-[1440px] mx-auto">
+// //           <div className="flex items-center gap-4">
+// //             <button className="text-secondary active:scale-95 transition-transform duration-200 cursor-pointer">
+// //               <span className="material-symbols-outlined text-2xl">menu</span>
+// //             </button>
+// //             <span 
+// //               onClick={() => navigate("/")}
+// //               className="font-headline-md text-headline-md tracking-[0.3em] font-bold text-secondary cursor-pointer select-none active:opacity-80"
+// //             >
+// //               SNITCH
+// //             </span>
+// //           </div>
+          
+// //           <div className="flex items-center gap-6">
+// //             <nav className="hidden md:flex gap-8">
+// //               <span 
+// //                 onClick={() => navigate("/")} 
+// //                 className="font-label-md text-label-md uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer"
+// //               >
+// //                 Catalog
+// //               </span>
+// //               <span 
+// //                 className="font-label-md text-label-md uppercase tracking-[0.2em] text-secondary hover:text-primary transition-colors duration-300 cursor-pointer"
+// //               >
+// //                 Create
+// //               </span>
+// //               <span 
+// //                 className="font-label-md text-label-md uppercase tracking-[0.2em] text-on-surface-variant hover:text-primary transition-colors duration-300 cursor-pointer"
+// //               >
+// //                 Insights
+// //               </span>
+// //             </nav>
+            
+// //             <div className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden cursor-pointer active:scale-95 transition-transform duration-200">
+// //               <img 
+// //                 alt="Profile" 
+// //                 className="w-full h-full object-cover" 
+// //                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEQw7l75HzqPhYK-4cz9fLj-QbvJjp5cED44yqdp3LT4FXT0lGhKzxE8iBAgiYvsXzYQRnyXJ11LEWiFk0j8irBYOYNBBNln2KIQt7AO2-vNxuOwrFeO-H9KqUflP32ghR1EhGbS3345XYYe6Nm6Z8rVM3EAYez7OC3Rs5QD3v_37hhaVnK_wTPNAMSVzThd58xjDHLkvQk1WpWEPG6Gidag8iYFyzS00d5Ry93zj4oQhWMNsa5UJj8AQfc8KA_BEwQCS1gESVxRA"
+// //               />
+// //             </div>
+// //           </div>
+// //         </div>
+// //       </header>
+
+// //       {/* Main Content Area */}
+// //       <main className="pt-32 px-8 max-w-[1440px] mx-auto min-h-screen">
+        
+// //         {/* Page Header */}
+// //         <div className="mb-16">
+// //           <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface tracking-tighter mb-4">
+// //             New Masterpiece
+// //           </h1>
+// //           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+// //             Define the essence of your next catalog entry. Every detail matters in the SNITCH ecosystem.
+// //           </p>
+// //         </div>
+
+// //         {/* Status Toast Notification */}
+// //         {status.message && (
+// //           <div 
+// //             className={`mb-8 p-4 rounded-xl flex items-center gap-3 transition-all duration-300 max-w-4xl border ${
+// //               status.type === "success" 
+// //                 ? "bg-green-950/20 border-green-500/30 text-green-400" 
+// //                 : "bg-red-950/20 border-red-500/30 text-red-400"
+// //             }`}
+// //           >
+// //             <span className="material-symbols-outlined">
+// //               {status.type === "success" ? "check_circle" : "error"}
+// //             </span>
+// //             <span className="font-body-md text-body-md font-medium">{status.message}</span>
+// //           </div>
+// //         )}
+
+// //         {/* Form Layout (Single Column on Mobile, Responsive Horizontal Flow on Desktop) */}
+// //         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          
+// //           {/* Left Column: Visual Identity / Media Upload */}
+// //           <div className="lg:col-span-5 xl:col-span-4 space-y-8">
+// //             <div>
+// //               <span className="font-label-md text-label-md uppercase tracking-widest text-secondary block mb-6">
+// //                 Visual Identity
+// //               </span>
+
+// //               {/* Hero Image Upload Box */}
+// //               <div 
+// //                 onClick={() => triggerFileInput(0)}
+// //                 className="relative group aspect-[4/5] bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant hover:border-secondary transition-all duration-500 cursor-pointer flex flex-col items-center justify-center"
+// //               >
+// //                 {images[0] ? (
+// //                   <>
+// //                     <img 
+// //                       alt="Hero Preview" 
+// //                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+// //                       src={images[0].preview}
+// //                     />
+// //                     {/* Delete Overlay */}
+// //                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+// //                       <button
+// //                         type="button"
+// //                         onClick={(e) => removeImage(e, 0)}
+// //                         className="w-12 h-12 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors active:scale-95 duration-200"
+// //                       >
+// //                         <span className="material-symbols-outlined text-2xl">delete</span>
+// //                       </button>
+// //                     </div>
+// //                   </>
+// //                 ) : (
+// //                   <div className="z-10 flex flex-col items-center text-center p-8 group-hover:scale-105 transition-transform duration-500">
+// //                     <span className="material-symbols-outlined text-4xl mb-4 text-secondary">
+// //                       add_a_photo
+// //                     </span>
+// //                     <h3 className="font-headline-md text-headline-md mb-2 text-on-surface">Upload Hero Image</h3>
+// //                     <p className="font-body-md text-body-md text-on-surface-variant">Recommended 2000 x 2500px</p>
+// //                   </div>
+// //                 )}
+// //               </div>
+// //             </div>
+
+// //             {/* Additional 6 Image Slots */}
+// //             <div className="grid grid-cols-3 gap-4">
+// //               {Array.from({ length: 6 }).map((_, i) => {
+// //                 const slotIndex = i + 1;
+// //                 const img = images[slotIndex];
+                
+// //                 return (
+// //                   <div 
+// //                     key={slotIndex}
+// //                     onClick={() => triggerFileInput(slotIndex)}
+// //                     className="relative aspect-square bg-surface-container-low rounded-lg border border-outline-variant hover:border-secondary transition-all duration-300 cursor-pointer flex items-center justify-center group overflow-hidden"
+// //                   >
+// //                     {img ? (
+// //                       <>
+// //                         <img 
+// //                           alt={`Slot ${slotIndex} Preview`}
+// //                           className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+// //                           src={img.preview}
+// //                         />
+// //                         {/* Small Hover Delete Button */}
+// //                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+// //                           <button
+// //                             type="button"
+// //                             onClick={(e) => removeImage(e, slotIndex)}
+// //                             className="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:bg-red-600 transition-colors active:scale-95 duration-200"
+// //                           >
+// //                             <span className="material-symbols-outlined text-sm">close</span>
+// //                           </button>
+// //                         </div>
+// //                       </>
+// //                     ) : (
+// //                       <span className="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors text-2xl">
+// //                         add
+// //                       </span>
+// //                     )}
+// //                   </div>
+// //                 );
+// //               })}
+// //             </div>
+// //           </div>
+
+// //           {/* Right Column: Details & Pricing (Container) */}
+// //           <div className="lg:col-span-7 xl:col-span-8 grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-16 items-start">
+            
+// //             {/* Column 2: Product Info */}
+// //             <div className="space-y-12">
+// //               <div>
+// //                 <span className="font-label-md text-label-md uppercase tracking-widest text-secondary block mb-6">
+// //                   Product Info
+// //                 </span>
+                
+// //                 {/* Title Section */}
+// //                 <div className="space-y-4">
+// //                   <label className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant block">
+// //                     Product Title
+// //                   </label>
+// //                   <input 
+// //                     type="text"
+// //                     value={title}
+// //                     onChange={(e) => setTitle(e.target.value)}
+// //                     className="w-full bg-transparent border-0 border-b border-outline-variant py-4 px-0 font-headline-lg text-headline-lg text-on-surface placeholder:text-surface-variant focus:ring-0 focus:border-secondary transition-all duration-300" 
+// //                     placeholder="e.g. Zenith Chronograph"
+// //                     required
+// //                   />
+// //                 </div>
+// //               </div>
+
+// //               {/* Description Section */}
+// //               <div className="space-y-4">
+// //                 <label className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant block">
+// //                   Narrative
+// //                 </label>
+// //                 <textarea 
+// //                   value={description}
+// //                   onChange={(e) => setDescription(e.target.value)}
+// //                   className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl p-6 font-body-lg text-body-lg text-on-surface placeholder:text-surface-variant focus:ring-0 focus:border-secondary transition-all duration-300 resize-none" 
+// //                   placeholder="Describe the soul of this creation..." 
+// //                   rows="6"
+// //                   required
+// //                 ></textarea>
+// //               </div>
+// //             </div>
+
+// //             {/* Column 3: Valuation & Actions */}
+// //             <div className="space-y-12">
+// //               <div>
+// //                 <span className="font-label-md text-label-md uppercase tracking-widest text-secondary block mb-6">
+// //                   Valuation & Actions
+// //                 </span>
+
+// //                 {/* Price & Currency Section */}
+// //                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  
+// //                   {/* Valuation Input */}
+// //                   <div className="space-y-4">
+// //                     <label className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant block">
+// //                       Valuation
+// //                     </label>
+// //                     <div className="relative flex items-center">
+// //                       <span className="absolute left-0 font-headline-md text-secondary select-none">$</span>
+// //                       <input 
+// //                         type="number"
+// //                         value={priceAmount}
+// //                         onChange={(e) => setPriceAmount(e.target.value)}
+// //                         className="w-full bg-transparent border-0 border-b border-outline-variant py-4 pl-6 pr-0 font-headline-md text-headline-md text-on-surface placeholder:text-surface-variant focus:ring-0 focus:border-secondary transition-all" 
+// //                         placeholder="0.00" 
+// //                         step="0.01" 
+// //                         required
+// //                       />
+// //                     </div>
+// //                   </div>
+
+// //                   {/* Currency Dropdown */}
+// //                   <div className="space-y-4">
+// //                     <label className="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant block">
+// //                       Currency
+// //                     </label>
+// //                     <select 
+// //                       value={priceCurrency}
+// //                       onChange={(e) => setPriceCurrency(e.target.value)}
+// //                       className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl py-4 px-6 font-body-lg text-body-lg text-on-surface appearance-none focus:ring-0 focus:border-secondary transition-all cursor-pointer"
+// //                     >
+// //                       <option value="USD">USD — US Dollar</option>
+// //                       <option value="EUR">EUR — Euro</option>
+// //                       <option value="GBP">GBP — British Pound</option>
+// //                       <option value="JPY">JPY — Japanese Yen</option>
+// //                       <option value="INR">INR — Indian Rupee</option>
+// //                     </select>
+// //                   </div>
+
+// //                 </div>
+// //               </div>
+
+// //               {/* Actions Buttons */}
+// //               <div className="pt-8 flex flex-col sm:flex-row xl:flex-col gap-6">
+// //                 <button 
+// //                   type="submit"
+// //                   disabled={loading}
+// //                   className="flex-1 bg-secondary text-on-secondary font-label-md text-label-md py-6 rounded-full uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+// //                 >
+// //                   {loading ? "Publishing..." : "Create Product"}
+// //                 </button>
+                
+// //                 <button 
+// //                   type="button"
+// //                   onClick={() => {
+// //                     setTitle("");
+// //                     setDescription("");
+// //                     setPriceAmount("");
+// //                     setPriceCurrency("USD");
+// //                     images.forEach((img) => {
+// //                       if (img) URL.revokeObjectURL(img.preview);
+// //                     });
+// //                     setImages(Array(7).fill(null));
+// //                     setStatus({ type: null, message: "" });
+// //                   }}
+// //                   className="px-12 py-6 border border-outline-variant rounded-full font-label-md text-label-md uppercase tracking-widest text-on-surface hover:border-on-surface hover:bg-surface-container transition-all duration-200 cursor-pointer active:scale-95"
+// //                 >
+// //                   Reset
+// //                 </button>
+// //               </div>
+
+// //             </div>
+// //           </div>
+// //         </form>
+// //       </main>
+
+// //       {/* BottomNavBar (Mobile Only) */}
+// //       <nav className="md:hidden fixed bottom-0 w-full z-50 bg-surface/90 backdrop-blur-3xl border-t border-white/5">
+// //         <div className="flex justify-around items-center h-20 px-6 pb-2">
+// //           <span 
+// //             onClick={() => navigate("/")}
+// //             className="flex flex-col items-center justify-center text-on-surface-variant/50 hover:text-secondary/80 transition-all cursor-pointer"
+// //           >
+// //             <span className="material-symbols-outlined">dashboard</span>
+// //             <span className="font-label-md text-[10px] uppercase tracking-widest mt-1">CATALOG</span>
+// //           </span>
+// //           <span className="flex flex-col items-center justify-center text-secondary brightness-125 scale-110 transition-transform cursor-pointer">
+// //             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>add_circle</span>
+// //             <span className="font-label-md text-[10px] uppercase tracking-widest mt-1">CREATE</span>
+// //           </span>
+// //           <span className="flex flex-col items-center justify-center text-on-surface-variant/50 hover:text-secondary/80 transition-all cursor-pointer">
+// //             <span className="material-symbols-outlined">analytics</span>
+// //             <span className="font-label-md text-[10px] uppercase tracking-widest mt-1">INSIGHTS</span>
+// //           </span>
+// //           <span className="flex flex-col items-center justify-center text-on-surface-variant/50 hover:text-secondary/80 transition-all cursor-pointer">
+// //             <span className="material-symbols-outlined">person</span>
+// //             <span className="font-label-md text-[10px] uppercase tracking-widest mt-1">PROFILE</span>
+// //           </span>
+// //         </div>
+// //       </nav>
+// //     </div>
+// //   );
+// // };
+
+// // export default CreateProduct;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// [
+//     {
+//         "price": {
+//             "amount": 1000,
+//             "currency": "INR"
+//         },
+//         "_id": "6a0ac6eb5ddc66479fdcf9ef",
+//         "title": "product_1",
+//         "description": "description_1",
+//         "seller": "6a02dd99b2c41006f661a07f",
+//         "images": [
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/f731251a689c54a85726fa88adeaa30e_Z33dvrD-A.jpg",
+//                 "_id": "6a0ac6eb5ddc66479fdcf9f0"
+//             }
+//         ],
+//         "createdAt": "2026-05-18T07:59:39.926Z",
+//         "updatedAt": "2026-05-18T07:59:39.926Z",
+//         "__v": 0
+//     },
+//     {
+//         "price": {
+//             "amount": 1299,
+//             "currency": "INR"
+//         },
+//         "_id": "6a0ded7516fbd90a631c2660",
+//         "title": "Linen Shirt",
+//         "description": "Old Money Linen Shirt",
+//         "seller": "6a02dd99b2c41006f661a07f",
+//         "images": [
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/dc55f71fc0b182244f1c378cb662068a_koO7qm2W_C.jpg",
+//                 "_id": "6a0ded7516fbd90a631c2661"
+//             },
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/ee0f34588843a6710416e39be52490fb_4Sibadksm.jpg",
+//                 "_id": "6a0ded7516fbd90a631c2662"
+//             },
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/f1a36b556fe68fdd482a10378af719ea_ZiycgZLbW.jpg",
+//                 "_id": "6a0ded7516fbd90a631c2663"
+//             },
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/f3ac0b30b4f3eed1c39d3a31e67730d0_Hnqt3NDVVz.jpg",
+//                 "_id": "6a0ded7516fbd90a631c2664"
+//             },
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/f86fd730bb00428669c0eab7ac437a50_7kHKCXM9K.jpg",
+//                 "_id": "6a0ded7516fbd90a631c2665"
+//             },
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/f731251a689c54a85726fa88adeaa30e_Gk0HDIfd_h.jpg",
+//                 "_id": "6a0ded7516fbd90a631c2666"
+//             },
+//             {
+//                 "url": "https://ik.imagekit.io/Dilshad/snitch/rs_634x952-170316094114-ThorRagnarok58c9d18ec0d49_S1aIk8Mo_.avif",
+//                 "_id": "6a0ded7516fbd90a631c2667"
+//             }
+//         ],
+//         "createdAt": "2026-05-20T17:20:53.486Z",
+//         "updatedAt": "2026-05-20T17:20:53.486Z",
+//         "__v": 0
+//     }
+// ]
