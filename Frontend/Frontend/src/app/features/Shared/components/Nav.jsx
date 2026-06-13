@@ -1,11 +1,21 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, Link } from 'react-router'
+import { useAuth } from '../../auth/hook/useAuth'
 
 const Nav = () => {
     const navigate = useNavigate()
     const user = useSelector(state => state.auth.user)
     const cartItems = useSelector(state => state.cart?.items)
+    const wishlistItems = useSelector(state => state.wishlist?.items)
+
+    const { handleLogout } = useAuth()
+
+
+    const logoutUser = async () => {
+        await handleLogout();
+        navigate("/login");
+    };
 
     return (
         <nav className="px-8 lg:px-16 xl:px-24 pt-10 pb-6 flex items-center justify-between border-b" style={{ borderColor: '#e4e2df' }}>
@@ -22,6 +32,7 @@ const Nav = () => {
                         {user.role === 'seller' && (
                             <Link to="/seller/dashboard" className="transition-colors hover:text-[#C9A96E]">Seller Dashboard</Link>
                         )}
+                        {/* Cart icon */}
                         <Link
                             to="/cart"
                             className="relative flex items-center hover:opacity-70 transition-opacity"
@@ -50,6 +61,49 @@ const Nav = () => {
                                 </span>
                             )}
                         </Link>
+
+                        {/* Wishlist icon */}
+                        <Link
+                            to="/wishlist"
+                            className="relative flex items-center hover:opacity-70 transition-opacity"
+                            style={{ color: '#1b1c1a' }}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.5"
+                            >
+                                <path d="M12 21s-6.7-4.35-9.33-8.09C.8 10.25 1.4 6.4 4.6 4.6c2.24-1.26 5.05-.65 6.4 1.4 1.35-2.05 4.16-2.66 6.4-1.4 3.2 1.8 3.8 5.65 1.93 8.31C18.7 16.65 12 21 12 21z"/>
+                            </svg>
+
+                            {wishlistItems?.length > 0 && (
+                            <span
+                                className="absolute -top-2 -right-2 flex items-center justify-center rounded-full text-white"
+                                style={{
+                                    backgroundColor: '#C9A96E',
+                                    width: '16px',
+                                    height: '16px',
+                                    fontSize: '9px',
+                                    fontWeight: 600,
+                                }}
+                            >
+                                {wishlistItems.length}
+                            </span>
+                            )}
+                        </Link>
+
+                        {/* Logout Button */}
+
+                        <button
+                            onClick={logoutUser}
+                            className="px-4 py-2 bg-red-500 text-white rounded"
+                        >
+                             Logout
+                        </button>
                     </>
                 ) : (
                     <>

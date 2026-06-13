@@ -2,6 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router';
 import { useProduct } from '../hooks/useProduct';
 import { useCart } from '../../cart/hook/useCart';
+import { useWishlist } from '../../wishlist/hook/useWishlist'
+import { useSelector } from 'react-redux'
 
 const ProductDetail = () => {
     const { productId } = useParams();
@@ -9,10 +11,12 @@ const ProductDetail = () => {
     const [ selectedImage, setSelectedImage ] = useState(0);
     const [ selectedAttributes, setSelectedAttributes ] = useState({});
     const navigate = useNavigate();
+
+    const wishlistItems = useSelector( state => state.wishlist.items )
+
     const { handleGetProductById } = useProduct();
     const { handleAddItem } = useCart()
-
-
+    const { handleAddWishlist, handleRemoveWishlist, handleGetWishlist } = useWishlist()
 
 
     async function fetchProductDetails() {
@@ -35,6 +39,7 @@ const ProductDetail = () => {
         }
     }, [ product ]);
 
+
     const activeVariant = useMemo(() => {
         if (!product?.variants || product.variants.length === 0) return null;
         return product.variants.find(v => {
@@ -49,7 +54,18 @@ const ProductDetail = () => {
     }, [ product, selectedAttributes ]);
 
 
-    console.log({ product, activeVariant })
+    const isWishlisted = wishlistItems.some( item =>
+        item.product?._id === product?._id &&
+        item.variant === activeVariant?._id
+    );
+
+    useEffect(() => {
+        if (product) {
+            handleGetWishlist();
+        }
+    }, [product]);
+     
+    // console.log({ product, activeVariant })
 
     const availableAttributes = useMemo(() => {
         if (!product?.variants) return {};
@@ -95,6 +111,19 @@ const ProductDetail = () => {
         }
     };
 
+    const handleWishlistToggle = async () => {
+        if (!activeVariant) return;
+
+        if (isWishlisted) {
+            await handleRemoveWishlist({
+                productId: product._id,
+                variantId: activeVariant._id,
+            });
+        } else {
+        await handleAddWishlist({ productId: product._id, variantId: activeVariant._id, });
+        }
+    };
+
     if (!product) {
         return (
             <div className="min-h-screen flex items-center justify-center selection:bg-[#C9A96E]/30" style={{ backgroundColor: '#fbf9f6' }}>
@@ -105,7 +134,7 @@ const ProductDetail = () => {
         );
     }
 
-    console.log(product)
+    // console.log(product)
 
     // Fallbacks
     const displayImages = (activeVariant?.images && activeVariant.images.length > 0)
@@ -161,6 +190,42 @@ const ProductDetail = () => {
                                     className="w-full h-full object-cover transition-opacity duration-500"
 
                                 />
+                                <button
+                                    className="absolute top-6 right-6 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300"
+                                    style={{
+                                        backgroundColor: 'rgba(251,249,246,0.9)',
+                                        border: '1px solid #e4e2df'
+                                    }}
+                                    onClick={() => {
+                                        if (!activeVariant) return
+
+                                        if (isWishlisted) {
+                                            handleRemoveWishlist({
+                                                productId: product._id,
+                                                variantId: activeVariant._id
+                                            })
+                                        } else {     
+                                            handleAddWishlist({
+                                                productId: product._id,
+                                                variantId: activeVariant?._id
+                                            })
+                                        }
+                                    }}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill={isWishlisted ? "red" : "none"}
+                                        stroke={isWishlisted ? "red" : "#1b1c1a"}
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M12 21s-6.7-4.35-9.33-8.09C.8 10.25 1.4 6.4 4.6 4.6c2.24-1.26 5.05-.65 6.4 1.4 1.35-2.05 4.16-2.66 6.4-1.4 3.2 1.8 3.8 5.65 1.93 8.31C18.7 16.65 12 21 12 21z"/>
+                                    </svg>
+                                </button>
                                 {displayImages.length > 1 && (
                                     <>
                                         <button

@@ -23,7 +23,9 @@ const tokens = {
 
 const Cart = () => {
     const cart = useSelector(state => state.cart)
-    const { handleGetCart, handleIncrementCartItemQuantity, handleCreateCartOrder, handleVerifyCartOrder } = useCart()
+    console.log(cart.items[0]);
+    
+    const { handleGetCart, handleIncrementCartItemQuantity, handleDecrementCartItemQuantity, handleRemoveCartItem, handleCreateCartOrder, handleVerifyCartOrder } = useCart()
     const navigate = useNavigate()
     const { error, isLoading, Razorpay } = useRazorpay();
     const user = useSelector(state => state.user)
@@ -319,7 +321,7 @@ const Cart = () => {
                                                     >
                                                         <button
                                                             id={`qty-dec-${_id}`}
-                                                            onClick={() => changeQty(_id, -1)}
+                                                            onClick={() => handleDecrementCartItemQuantity({ productId: _id, variantId })}
                                                             className="w-9 h-9 flex items-center justify-center text-sm font-light transition-colors hover:opacity-60"
                                                             style={{ color: tokens.onSurface, borderRight: `1px solid ${tokens.outlineVariant}` }}
                                                             aria-label="Decrease quantity"
@@ -334,7 +336,7 @@ const Cart = () => {
                                                         </span>
                                                         <button
                                                             id={`qty-inc-${_id}`}
-                                                            onClick={() => handleIncrementCartItem({ productId: _id, variantId })}
+                                                            onClick={() => handleIncrementCartItemQuantity({ productId: _id, variantId })}
                                                             className="w-9 h-9 flex items-center justify-center text-sm font-light transition-colors hover:opacity-60"
                                                             style={{ color: tokens.onSurface, borderLeft: `1px solid ${tokens.outlineVariant}` }}
                                                             aria-label="Increase quantity"
@@ -346,6 +348,7 @@ const Cart = () => {
                                                     {/* Remove */}
                                                     <button
                                                         id={`remove-${_id}`}
+                                                        onClick={() => handleRemoveCartItem({ productId: _id, variantId })}
                                                         className="text-[10px] uppercase tracking-[0.22em] font-medium transition-all duration-200 hover:underline hover:opacity-70"
                                                         style={{ color: tokens.muted }}
                                                     >

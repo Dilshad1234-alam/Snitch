@@ -1,2 +1,7 @@
 rzp_test_ShNSKpxt3emQVJ - rezorpay_ID
 Xf0KO3WoWLahadIxOSK9Qcj - rezorpay_SECRET
+
+
+git add .
+git commit -m "Added product dashboard"
+git push

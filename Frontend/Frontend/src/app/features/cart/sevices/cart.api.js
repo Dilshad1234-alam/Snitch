@@ -23,6 +23,16 @@ export const incrementCartItemQuantityApi = async ({ productId, variantId }) => 
     return response.data
 }
 
+export const decrementCartItemQuantityApi = async ({ productId, variantId }) => {
+    const response = await cartApiInstance.patch(`/quantity/decrement/${productId}/${variantId}`)
+    return response.data
+}
+
+export const removeCartItemApi = async ({ productId, variantId }) => {
+    const response = await cartApiInstance.delete(`/remove/${productId}/${variantId}`)
+    return response.data
+}
+
 export const createCartOrder = async () => {
     const response = await cartApiInstance.post("payment/create/order")
     return response.data

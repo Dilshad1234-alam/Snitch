@@ -22,3 +22,14 @@ export const validateIncrementCartQuantity = [
     validateRequest
 ]
 
+export const validateDecrementCartQuantity = [
+    param("productId").isMongoId().withMessage("Invalid product ID"),
+    param("variantId").optional().isMongoId().withMessage("Invalid variant ID"),
+    validateRequest
+]
+
+export const validateRemoveCartItem = [
+    param("productId").isMongoId().withMessage("Invalid product Id"),
+    param("varaintId").optional().isMongoId().withMessage("Invalid variant ID"),
+    validateRequest
+]

@@ -4,10 +4,12 @@ import { routes } from './app.routes'
 import { useSelector } from "react-redux";
 import { useAuth } from './features/auth/hook/useAuth';
 import { useEffect } from 'react';
+import { useWishlist } from './features/wishlist/hook/useWishlist';
 
 function App() {
 
   const { handleGetMe } = useAuth();
+  const { handleGetWishlist } = useWishlist()
 
   const user = useSelector(state => state.auth.user);
 
@@ -15,6 +17,7 @@ function App() {
   
   useEffect(() => {
     handleGetMe()
+    handleGetWishlist()
   }, [])
 
   return (

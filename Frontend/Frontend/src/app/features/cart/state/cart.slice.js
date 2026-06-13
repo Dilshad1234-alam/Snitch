@@ -19,16 +19,34 @@ const cartSlice = createSlice({
         incrementCartItemQuantity: (state, action) => {
             const { productId, variantId } = action.payload
 
-            state.items = state.items.map(item => {
-                if (item.product._id === productId && item.variant === variantId) {
-                    return { ...item, quantity: item.quantity + 1 }
-                } else {
-                    return item
-                }
+            const item = state.items.find(item => item.product._id?.toString() === productId?.toString() && item.variant?.toString() === variantId?.toString() )
+
+            if (item) {
+                item.quantity += 1
+                state.totalPrice += item.price.amount
+            }
+        },
+        decrementCartItemQuantity: (state, action) => {
+            const { productId, variantId } = action.payload
+
+            const item = state.items.find( item => item.product._id?.toString() === productId?.toString() && item.variant?.toString() === variantId?.toString() )
+
+            if (item && item.quantity > 1) {
+                item.quantity -= 1
+                state.totalPrice -= item.price.amount
+            }
+        },
+        removeCartItem: (state, action) => {
+            const { productId, variantId } = action.payload
+
+            state.items = state.items.filter(item => {
+                !(
+                    item.product._id?.toString() === productId?.toString() && item.variant?.toString() === variantId?.toString()
+                )
             })
         }
     }
 })
 
-export const { setCart, addItem, incrementCartItemQuantity } = cartSlice.actions
+export const { setCart, addItem, incrementCartItemQuantity, decrementCartItemQuantity, removeCartItem } = cartSlice.actions
 export default cartSlice.reducer

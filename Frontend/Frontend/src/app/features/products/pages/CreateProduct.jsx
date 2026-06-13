@@ -22,6 +22,7 @@ const CreateProduct = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        // console.log(name, value);
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
@@ -56,6 +57,13 @@ const CreateProduct = () => {
         });
     };
 
+    console.log({
+  title: formData.title,
+  description: formData.description,
+  priceAmount: formData.priceAmount,
+  priceCurrency: formData.priceCurrency,
+});
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
@@ -74,6 +82,7 @@ const CreateProduct = () => {
             setIsSubmitting(false);
         }
     };
+   
 
     const inputClass = "w-full bg-transparent outline-none py-4 text-sm transition-colors duration-300 placeholder:text-[#d0c5b5]";
     const inputStyle = { color: '#1b1c1a', borderBottom: '1px solid #d0c5b5', fontFamily: "'Inter', sans-serif" };
