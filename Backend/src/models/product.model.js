@@ -6,6 +6,11 @@ const productSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true
+    },    
+    category: {
+        type: String,
+        required: true,
+        enum: [ "shirt", "tshirt", "jeans", "trousers", "jackets", "shoes", ]
     },
     description: {
         type: String,

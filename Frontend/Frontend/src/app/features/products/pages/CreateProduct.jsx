@@ -7,17 +7,23 @@ const MAX_IMAGES = 7;
 
 const CreateProduct = () => {
     const { handleCreateProduct } = useProduct();
+    const { handleBulkUpload } = useProduct()
     const navigate = useNavigate();
+
+    const fileRef = useRef(null)
 
     const [formData, setFormData] = useState({
         title: '',
+        category: '',
         description: '',
         priceAmount: '',
         priceCurrency: 'INR',
     });
+
     const [images, setImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [bulkFile, setBulkFile] = useState(null);
     const fileInputRef = useRef(null);
 
     const handleChange = (e) => {
@@ -58,19 +64,47 @@ const CreateProduct = () => {
     };
 
     console.log({
-  title: formData.title,
-  description: formData.description,
-  priceAmount: formData.priceAmount,
-  priceCurrency: formData.priceCurrency,
-});
+        title: formData.title,
+        category: formData.category,
+        description: formData.description,
+        priceAmount: formData.priceAmount,
+        priceCurrency: formData.priceCurrency,
+    });
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
+
+            // BULK UPLOAD
+        if (bulkFile) {
+
+            const formData = new FormData();
+
+            formData.append("file", bulkFile);
+
+            const response = await fetch(
+                "http://localhost:3000/product/bulk-upload",
+                {
+                    method: "POST",
+                    body: formData,
+                    credentials: "include"
+                }
+            );
+
+            const data = await response.json();
+
+            alert(data.message);
+
+            return;
+        }
+
+        // SINGLE PRODUCT
             const data = new FormData();
             data.append('title', formData.title);
             data.append('description', formData.description);
+            data.append('category', formData.category);
             data.append('priceAmount', formData.priceAmount);
             data.append('priceCurrency', formData.priceCurrency);
             images.forEach(img => data.append('images', img.file));
@@ -81,6 +115,28 @@ const CreateProduct = () => {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+
+
+    const uploadBulkProducts = async () => {
+
+        if (!bulkFile) return;
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            "file",
+            bulkFile
+        );
+
+        const data =
+            await handleBulkUpload(
+                formData
+            );
+
+        alert(data.message);
     };
    
 
@@ -188,6 +244,22 @@ const CreateProduct = () => {
                                         onBlur={handleBlur}
                                     />
                                 </div>
+
+                                <select
+                                    name="category"
+                                    value={formData.category}
+                                    onChange={handleChange}
+                                    className="border p-2 w-full"
+                                    style={{ color: '#7A6E63' }}
+                                >
+                                    <option value="">Select Category</option>
+                                    <option value="shirt">Shirt</option>
+                                    <option value="tshirt">T-Shirt</option>
+                                    <option value="jeans">Jeans</option>
+                                    <option value="trousers">Trousers</option>
+                                    <option value="jackets">Jackets</option>
+                                    <option value="shoes">Shoes</option>
+                                </select>
 
                                 {/* Price */}
                                 <div className="flex flex-col gap-3">
@@ -320,6 +392,29 @@ const CreateProduct = () => {
                                     </div>
                                 )}
                             </div>
+                        </div>
+
+                        {/* AddBulk Button */}
+                        <div className="mt-6">
+
+                            <input
+                                type="file"
+                                ref={fileRef}
+                                accept=".json,.xlsx,.csv"
+                                onChange={(e) =>
+                                    setBulkFile(
+                                        e.target.files[0]
+                                    )
+                                }
+                            />
+
+                            <button
+                                onClick={() => fileRef.current.click()}
+                                className="bg-black text-white px-5 py-2 rounded mt-3"
+                            >
+                                Add Bulk Products
+                            </button>
+
                         </div>
 
                         {/* ── Submit Button ── */}

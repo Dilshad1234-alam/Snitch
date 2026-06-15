@@ -1,10 +1,12 @@
 import productModel from '../models/product.model.js'
 import { uploadFile } from '../services/storage.service.js';
+import XLSX from 'xlsx'
 
 
 export async function createProduct(req, res) {
     
-    const { title, description, priceAmount, priceCurrency } = req.body 
+    const { title, description, category, priceAmount, priceCurrency } = req.body 
+    console.log(req.body);
     const seller = req.user; 
 
     const files = req.files || []
@@ -19,6 +21,7 @@ export async function createProduct(req, res) {
     const product = await productModel.create({
         title,
         description,
+        category,
         price: {
             amount: priceAmount,
             currency: priceCurrency || "INR"
@@ -34,6 +37,7 @@ export async function createProduct(req, res) {
     })
 }
 
+
 export async function getSellerProducts(req, res ) {
     const seller = req.user;
 
@@ -45,6 +49,7 @@ export async function getSellerProducts(req, res ) {
     })
 }
 
+
 export async function getAllProducts(req, res) {
 
     const products = await productModel.find() 
@@ -55,6 +60,7 @@ export async function getAllProducts(req, res) {
         products
     })
 }
+
 
 export  async function getProductDetails(req, res) {
     const  { id} = req.params;
@@ -74,6 +80,7 @@ export  async function getProductDetails(req, res) {
         product
     })
 }
+
 
 export async function addProductVariant(req, res) {
 
@@ -132,4 +139,119 @@ export async function addProductVariant(req, res) {
     
 }
 
+
+export const getProductsByCategory = async (req, res) => {
+
+    const { category } = req.params;
+
+    let products;
+
+    if (category === "all") {
+        products = await productModel.find();
+    } else {
+        products = await productModel.find({
+                category
+            });
+    }
+
+    res.status(200).json({
+        success: true,
+        products
+    });
+};
+
+
+
+export const bulkUploadProducts = async (req, res) => {
+
+    try {
+
+        const sellerId = req.user._id;
+
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).json({
+                success: false,
+                message: "File required"
+            });
+        }
+
+        let products = [];
+
+        // JSON Upload
+        if (file.originalname.endsWith(".json")) {
+
+            products = JSON.parse(
+                file.buffer.toString()
+            );
+
+        }
+
+        // Excel Upload
+        else if (
+            file.originalname.endsWith(".xlsx") ||
+            file.originalname.endsWith(".csv")
+        ) {
+
+            const workbook = XLSX.read(
+                file.buffer,
+                { type: "buffer" }
+            );
+
+            const sheet =
+                workbook.Sheets[
+                workbook.SheetNames[0]
+                ];
+
+            products =
+                XLSX.utils.sheet_to_json(sheet);
+        }
+
+        const formattedProducts =
+            products.map(product => ({
+                title: product.title,
+                category: product.category,
+                description: product.description,
+
+                seller: sellerId,
+
+                price: {
+                    amount: Number(
+                        product.priceAmount
+                    ),
+                    currency:
+                        product.priceCurrency || "INR"
+                },
+
+                images: [
+                    {
+                        url:
+                            product.image ||
+                            "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
+                    }
+                ]
+            }));
+
+        await productModel.insertMany(
+            formattedProducts
+        );
+
+        return res.status(201).json({
+            success: true,
+            count: formattedProducts.length,
+            message:
+                "Products uploaded successfully"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 

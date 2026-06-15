@@ -45,3 +45,16 @@ export async function addProductVariant(productId, newProductVariant) {
     return response.data
 
 }
+
+export async function getProductsByCategory( category ) {
+
+    const response = await productApiInstance.get( `/category/${category}` );
+
+    return response.data;
+}
+
+export async function bulkUploadProducts (formData ) {
+    const response = await productApiInstance.post("/bulk-upload", formData)
+
+    return response.data
+}

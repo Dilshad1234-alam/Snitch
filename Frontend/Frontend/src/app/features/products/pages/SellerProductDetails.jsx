@@ -26,6 +26,7 @@ const SellerProductDetails = () => {
   const { productId } = useParams();
   const { handleGetProductById, handleAddProductVariant } = useProduct();
 
+
   async function fetchProductDetails() {
     setLoading(true);
     try {
@@ -42,6 +43,7 @@ const SellerProductDetails = () => {
       setLoading(false);
     }
   }
+  
 
   useEffect(() => {
     fetchProductDetails();

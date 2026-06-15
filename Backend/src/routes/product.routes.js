@@ -1,6 +1,6 @@
 import express from 'express'
 import { authenticateSeller } from '../middlewares/auth.middleware.js'
-import { createProduct, getAllProducts, getSellerProducts, getProductDetails, addProductVariant } from '../controllers/product.controller.js'
+import { createProduct, getAllProducts, getSellerProducts, getProductDetails, addProductVariant, getProductsByCategory } from '../controllers/product.controller.js'
 import multer from 'multer'
 import { createProductValidator } from '../validator/product.validator.js'
 
@@ -14,6 +14,7 @@ const upload = multer({
 
 
 const router = express.Router();
+
 
 /**
  * @route POST /api/products
@@ -30,12 +31,16 @@ router.post("/", authenticateSeller, upload.array('images', 7), createProductVal
  */
 router.get("/seller", authenticateSeller, getSellerProducts)
 
+
 /**
  * @route GET /api/products
  * @description Get all products
  * @access Public
  */
 router.get("/", getAllProducts )
+
+
+router.get("/category/:category", getProductsByCategory)
 
 /**
  * @route GET /api/products/detail/:id
@@ -44,12 +49,16 @@ router.get("/", getAllProducts )
  */
 router.get("/detail/:id", getProductDetails)
 
+
 /**
  * @route post /api/products/:productId/variants
  * @description Add a new variant to a product
  * @access Private (Seller only)
  */
 router.post("/:productId/variants", authenticateSeller, upload.array('image', 7), addProductVariant )
+
+
+router.post("/bulk-upload", upload.single("file"), )
 
 
 export default router;

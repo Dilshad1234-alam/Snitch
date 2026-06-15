@@ -18,13 +18,33 @@ const Nav = () => {
     };
 
     return (
-        <nav className="px-8 lg:px-16 xl:px-24 pt-10 pb-6 flex items-center justify-between border-b" style={{ borderColor: '#e4e2df' }}>
+        <nav className="px-8 lg:px-16 xl:px-24 pt-10 pb-6 flex items-center justify-between border-b" style={{ borderColor: '#C9A96E' }}>
+
+            <div className="flex items-center gap-8">
+
             <Link to="/"
                 className="text-sm font-medium tracking-[0.35em] uppercase hover:opacity-80 transition-opacity"
                 style={{ fontFamily: "'Cormorant Garamond', serif", color: '#C9A96E' }}
             >
                 Snitch.
             </Link>
+
+            <Link to="/"
+                className="text-[10px] uppercase tracking-[0.2em] font-medium hover:text-[#C9A96E]"
+                style={{ color: '#7A6E63' }}
+            >
+                Home
+            </Link>
+
+            <Link to="/"
+                className="text-[10px] uppercase tracking-[0.2em] font-medium hover:text-[#C9A96E]"
+                style={{ color: '#7A6E63' }}
+            >
+                Product
+            </Link>
+
+            </div>    
+
             <div className="flex gap-6 items-center text-[10px] uppercase tracking-[0.2em] font-medium" style={{ color: '#7A6E63' }}>
                 {user ? (
                     <>
@@ -32,6 +52,7 @@ const Nav = () => {
                         {user.role === 'seller' && (
                             <Link to="/seller/dashboard" className="transition-colors hover:text-[#C9A96E]">Seller Dashboard</Link>
                         )}
+
                         {/* Cart icon */}
                         <Link
                             to="/cart"

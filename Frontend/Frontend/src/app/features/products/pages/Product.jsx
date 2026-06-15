@@ -69,7 +69,7 @@ const Home = () => {
                             className="text-5xl lg:text-7xl font-light leading-tight mb-6"
                             style={{ fontFamily: "'Cormorant Garamond', serif", color: '#1b1c1a' }}
                         >
-                            Curated Archive
+                            Product
                         </h1>
                         <p className="max-w-xl mx-auto text-sm leading-relaxed" style={{ color: '#7A6E63' }}>
                             Discover our latest curation of premium minimalist pieces, meticulously designed for effortless elegance and enduring quality.
