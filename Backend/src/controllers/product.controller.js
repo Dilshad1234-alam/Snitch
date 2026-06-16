@@ -208,8 +208,17 @@ export const bulkUploadProducts = async (req, res) => {
                 XLSX.utils.sheet_to_json(sheet);
         }
 
-        const formattedProducts =
-            products.map(product => ({
+        const formattedProducts = products.map(product => {
+
+            const amount = Number(product.price?.amount);
+
+            if (isNaN(amount)) {
+                throw new Error(
+                    `Invalid price in product: ${product.title}`
+                );
+            }
+
+            return {
                 title: product.title,
                 category: product.category,
                 description: product.description,
@@ -217,21 +226,20 @@ export const bulkUploadProducts = async (req, res) => {
                 seller: sellerId,
 
                 price: {
-                    amount: Number(
-                        product.priceAmount
-                    ),
-                    currency:
-                        product.priceCurrency || "INR"
+                    amount,
+                    currency: product.price?.currency || "INR"
                 },
 
-                images: [
-                    {
-                        url:
-                            product.image ||
-                            "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
-                    }
-                ]
-            }));
+                images:
+                    product.images?.length > 0
+                        ? product.images
+                        : [
+                            {
+                                url: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab"
+                            }
+                        ]
+                };
+            });
 
         await productModel.insertMany(
             formattedProducts

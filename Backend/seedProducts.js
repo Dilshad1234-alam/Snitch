@@ -6,7 +6,7 @@ import products from "./products.json" with { type: "json" };
 
 dotenv.config();
 
-const SELLER_ID = "6a02dd99b2c41006f661a07f";
+const SELLER_ID = new mongoose.Types.ObjectId("6a02dd99b2c41006f661a07f");
 
 async function seed() {
     try {
@@ -14,11 +14,17 @@ async function seed() {
 
         console.log("MongoDB Connected");
 
-        // await productModel.deleteMany({});
+        await productModel.deleteMany({});
 
         const productsWithSeller = products.map(product => ({
             ...product,
-            seller: SELLER_ID
+            seller: SELLER_ID,
+
+            variants: product.variants?.map(v => ({
+                ...v,
+                stock: v.stock ?? 0,
+                price: v.price ?? product.price
+            })) || []
         }));
 
         await productModel.insertMany(productsWithSeller);
@@ -28,7 +34,7 @@ async function seed() {
         process.exit(0);
 
     } catch (error) {
-        console.error(error);
+        console.error("Seed Error:", error);
         process.exit(1);
     }
 }

@@ -1,8 +1,9 @@
 import express from 'express'
 import { authenticateSeller } from '../middlewares/auth.middleware.js'
-import { createProduct, getAllProducts, getSellerProducts, getProductDetails, addProductVariant, getProductsByCategory } from '../controllers/product.controller.js'
+import { createProduct, getAllProducts, getSellerProducts, getProductDetails, addProductVariant, getProductsByCategory, bulkUploadProducts } from '../controllers/product.controller.js'
 import multer from 'multer'
 import { createProductValidator } from '../validator/product.validator.js'
+// import { bulkUploadProducts } from '../../../Frontend/Frontend/src/app/features/products/services/product.api.js'
 
 
 const upload = multer({
@@ -58,7 +59,7 @@ router.get("/detail/:id", getProductDetails)
 router.post("/:productId/variants", authenticateSeller, upload.array('image', 7), addProductVariant )
 
 
-router.post("/bulk-upload", upload.single("file"), )
+router.post("/bulk-upload", authenticateSeller, upload.single("file"), bulkUploadProducts)
 
 
 export default router;

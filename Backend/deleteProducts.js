@@ -20,56 +20,53 @@ async function deleteProducts() {
     try {
         await mongoose.connect(process.env.MONGO_URI);
 
-        const category = await ask("Category: ");
-        const serialInput = await ask(
-            "Serial Numbers (example 8,9,20): "
-        );
+        const option = await ask("Choose option (1/2): ");
 
-        const serialNumbers = serialInput
-            .split(",")
-            .map(num => Number(num.trim()))
-            .filter(Boolean);
+        let result;
 
-        const products = await productModel
-            .find({ category })
-            .sort({ createdAt: 1 });
+        if (option === "1") {
 
-        const idsToDelete = serialNumbers
-            .map(serial => products[serial - 1]?._id)
-            .filter(Boolean);
+            
+            const category = await ask("Category: ");
+            
+            const count = await productModel.countDocuments({ category });
+            
+            console.log(`Found ${count} products`);
+            
+            const confirm = await ask(
+                "Delete ALL products? (yes/no): "
+            );
+            
+            if (confirm.toLowerCase() !== "yes") {
+                console.log("Cancelled");
+                process.exit(0);
+            }
 
-        if (idsToDelete.length === 0) {
-            console.log("No valid products found.");
-            process.exit(0);
+            result = await productModel.deleteMany({
+                category
+            });
+            
+        } else if (option === "2") {
+            const count = await productModel.countDocuments();
+
+            console.log(`Total Products: ${count}`);
+
+            const confirm = await ask( " Delete ENTIRE products collection? (yes/no): " );
+
+            if (confirm.toLowerCase() !== "yes") { console.log("Cancelled"); process.exit(0); }
+
+            result = await productModel.deleteMany({})
+        } else {
+            console.log("Invalid option"); process.exit(0);
         }
 
-        console.log(
-            `Found ${idsToDelete.length} products to delete`
-        );
 
-        const confirm = await ask(
-            "Delete these products? (yes/no): "
-        );
-
-        if (confirm.toLowerCase() !== "yes") {
-            console.log("Cancelled");
-            process.exit(0);
-        }
-
-        const result = await productModel.deleteMany({
-            _id: { $in: idsToDelete }
-        });
+        // const result = await productModel.deleteMany({
+        //     category
+        // });
 
         console.log(
             `✅ ${result.deletedCount} products deleted`
-        );
-
-        const remaining = await productModel.countDocuments({
-            category
-        });
-
-        console.log(
-            `📦 Remaining ${category} products: ${remaining}`
         );
 
         rl.close();
