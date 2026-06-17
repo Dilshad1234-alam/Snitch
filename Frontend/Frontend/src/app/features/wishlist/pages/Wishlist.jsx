@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const Wishlist = () => {
     const wishlistItems = useSelector( (state) => state.wishlist.items );
-    // console.log(wishlistItems);
+    console.log(wishlistItems);
     
 
     const { handleGetWishlist, handleRemoveWishlist } = useWishlist();
@@ -25,10 +25,12 @@ const Wishlist = () => {
                 Wishlist
             </h1>
 
+
             {wishlistItems.length === 0 ? (
                 <p>Your wishlist is empty.</p>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
                     {wishlistItems.map((item) => (
                         <div key={item._id}
                             className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
@@ -66,12 +68,14 @@ const Wishlist = () => {
                                     ₹{item.selectedVariant?.price?.amount || item.product?.price?.amount}
                                 </p>
                                 <button
-                                    onClick={() =>
+                                    onClick={() =>{
+                                        if (!item.product) return;
+
                                         handleRemoveWishlist({
                                             productId: item.product._id,
                                             variantId: item.variant
                                         })
-                                    }
+                                    }}
                                     className="mt-3 bg-red-500 text-white px-3 py-2 rounded"
                                 >
                                    Remove

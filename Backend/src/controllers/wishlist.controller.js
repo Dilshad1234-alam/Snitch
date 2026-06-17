@@ -34,6 +34,13 @@ export const addWishlistItem = async (req, res) => {
         await wishlist.populate("items.product")
 
         const items = wishlist.items.map(item => {
+            if (!item.product) {
+                return {
+                    ...item.toObject(),
+                    selectedVariant: null,
+                };
+            }
+
             const variant = item.product.variants.find(
                 v => v._id.toString() === item.variant.toString()
             );
@@ -131,6 +138,12 @@ export const removeWishlistItem = async (req, res) => {
         await wishlist.populate("items.product")
 
         const items = wishlist.items.map(item => {
+            if (!item.product) {
+                return {
+                    ...item.toObject(),
+                    selectedVariant: null,
+                };
+            }
             const variant = item.product.variants.find(
                 v => v._id.toString() === item.variant.toString()
             );
@@ -144,7 +157,10 @@ export const removeWishlistItem = async (req, res) => {
         res.json({
             success: true,
             message: "Removed from wishlist",
-            wishlist,
+            wishlist: {
+                ...wishlist.toObject(),
+                items,
+            }
         });
     } catch (error) {
         res.status(500).json({

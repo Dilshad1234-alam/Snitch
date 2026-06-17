@@ -13,6 +13,7 @@ const ProductDetail = () => {
     const navigate = useNavigate();
 
     const wishlistItems = useSelector( state => state.wishlist.items )
+    console.log(wishlistItems);
 
     const { handleGetProductById } = useProduct();
     const { handleAddItem } = useCart()
@@ -112,17 +113,45 @@ const ProductDetail = () => {
     };
 
     const handleWishlistToggle = async () => {
-        if (!activeVariant) return;
+
+    console.log("CLICKED");
+
+    console.log("PRODUCT ID:", product?._id);
+    console.log("ACTIVE VARIANT:", activeVariant?._id);
+
+    if (!activeVariant) {
+        console.log("NO ACTIVE VARIANT");
+        return;
+    }
+
+    try {
 
         if (isWishlisted) {
+
+            console.log("REMOVE WISHLIST");
+
             await handleRemoveWishlist({
                 productId: product._id,
                 variantId: activeVariant._id,
             });
+
         } else {
-        await handleAddWishlist({ productId: product._id, variantId: activeVariant._id, });
+
+            console.log("ADD WISHLIST");
+
+            await handleAddWishlist({
+                productId: product._id,
+                variantId: activeVariant._id,
+            });
+
         }
-    };
+
+    } catch (err) {
+
+        console.error("WISHLIST ERROR:", err);
+
+    }
+};
 
     if (!product) {
         return (
@@ -133,6 +162,9 @@ const ProductDetail = () => {
             </div>
         );
     }
+
+    // console.log("PRODUCT:", product);
+    // console.log("VARIANTS:", product?.variants);
 
     // console.log(product)
 
@@ -196,21 +228,7 @@ const ProductDetail = () => {
                                         backgroundColor: 'rgba(251,249,246,0.9)',
                                         border: '1px solid #e4e2df'
                                     }}
-                                    onClick={() => {
-                                        if (!activeVariant) return
-
-                                        if (isWishlisted) {
-                                            handleRemoveWishlist({
-                                                productId: product._id,
-                                                variantId: activeVariant._id
-                                            })
-                                        } else {     
-                                            handleAddWishlist({
-                                                productId: product._id,
-                                                variantId: activeVariant?._id
-                                            })
-                                        }
-                                    }}
+                                    onClick={handleWishlistToggle}
                                 >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"

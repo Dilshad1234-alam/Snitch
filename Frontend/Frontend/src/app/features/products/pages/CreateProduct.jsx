@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useProduct } from '../hooks/useProduct';
+import axios from 'axios'
 
 const CURRENCIES = ['INR', 'USD', 'EUR', 'GBP'];
 const MAX_IMAGES = 7;
@@ -23,6 +24,7 @@ const CreateProduct = () => {
     const [images, setImages] = useState([]);
     const [isDragging, setIsDragging] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [bulkFile, setBulkFile] = useState(null);
     const fileInputRef = useRef(null);
 
@@ -75,6 +77,7 @@ const CreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+
         try {
 
             // BULK UPLOAD
@@ -84,18 +87,11 @@ const CreateProduct = () => {
 
             formData.append("file", bulkFile);
 
-            const response = await fetch(
-                "http://localhost:3000/product/bulk-upload",
-                {
-                    method: "POST",
-                    body: formData,
-                    credentials: "include"
-                }
-            );
+            await handleBulkUpload(formData);
 
-            const data = await response.json();
+            alert("Bulk Products Uploaded Successfully");
 
-            alert(data.message);
+            navigate("/");
 
             return;
         }
@@ -107,6 +103,7 @@ const CreateProduct = () => {
             data.append('category', formData.category);
             data.append('priceAmount', formData.priceAmount);
             data.append('priceCurrency', formData.priceCurrency);
+
             images.forEach(img => data.append('images', img.file));
             await handleCreateProduct(data);
             navigate('/');
@@ -144,6 +141,7 @@ const CreateProduct = () => {
     const inputStyle = { color: '#1b1c1a', borderBottom: '1px solid #d0c5b5', fontFamily: "'Inter', sans-serif" };
     const handleFocus = (e) => { e.target.style.borderBottomColor = '#C9A96E'; };
     const handleBlur = (e) => { e.target.style.borderBottomColor = '#d0c5b5'; };
+
 
     return (
         <>
@@ -191,8 +189,9 @@ const CreateProduct = () => {
                         <div className="mt-4 w-14 h-px" style={{ backgroundColor: '#C9A96E' }} />
                     </div>
 
+
                     {/* ── Form ── */}
-                    <form onSubmit={handleSubmit} className="pt-14 pb-24">
+                    <form onSubmit={handleSubmit} noValidate className="pt-14 pb-24">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 lg:items-start">
 
                             {/* ── LEFT COLUMN: Text Fields ── */}
@@ -213,7 +212,7 @@ const CreateProduct = () => {
                                         name="title"
                                         value={formData.title}
                                         onChange={handleChange}
-                                        required
+                                        required={!bulkFile}
                                         placeholder="e.g. Oversized Linen Shirt"
                                         className={inputClass}
                                         style={inputStyle}
@@ -242,6 +241,7 @@ const CreateProduct = () => {
                                         style={inputStyle}
                                         onFocus={handleFocus}
                                         onBlur={handleBlur}
+                                        required={!bulkFile}
                                     />
                                 </div>
 
@@ -251,6 +251,7 @@ const CreateProduct = () => {
                                     onChange={handleChange}
                                     className="border p-2 w-full"
                                     style={{ color: '#7A6E63' }}
+                                    required={!bulkFile}
                                 >
                                     <option value="">Select Category</option>
                                     <option value="shirt">Shirt</option>
@@ -276,7 +277,7 @@ const CreateProduct = () => {
                                                 name="priceAmount"
                                                 value={formData.priceAmount}
                                                 onChange={handleChange}
-                                                required
+                                                required={!bulkFile}
                                                 min="0"
                                                 step="0.01"
                                                 placeholder="0.00"
@@ -395,25 +396,32 @@ const CreateProduct = () => {
                         </div>
 
                         {/* AddBulk Button */}
-                        <div className="mt-6">
+                        <div className="mt-6" style={{ color: '#7A6E63', borderColor: isDragging ? '#C9A96E' : '#d0c5b5' }}>
 
                             <input
+                                className="hidden"
                                 type="file"
                                 ref={fileRef}
                                 accept=".json,.xlsx,.csv"
                                 onChange={(e) =>
-                                    setBulkFile(
-                                        e.target.files[0]
-                                    )
+                                    setBulkFile( e.target.files[0] )
                                 }
                             />
 
                             <button
+                                type="button"
                                 onClick={() => fileRef.current.click()}
                                 className="bg-black text-white px-5 py-2 rounded mt-3"
                             >
                                 Add Bulk Products
                             </button>
+
+                            {bulkFile && (
+                                <p className="mt-2 text-green-600">
+                                    Selected: {bulkFile.name}
+                                </p>
+                            )}
+
 
                         </div>
 

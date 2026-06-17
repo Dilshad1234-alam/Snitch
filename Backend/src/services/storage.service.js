@@ -12,6 +12,10 @@ export async function uploadFile({ buffer, fileName, folder = "snitch" }) {
         folder
     })
 
-    return result
+    return {
+        url: result.url
+    }
+    // console.log(result);
+    
 }
 
