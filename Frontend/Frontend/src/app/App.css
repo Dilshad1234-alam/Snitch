@@ -103,3 +103,18 @@ input:focus, textarea:focus, select:focus {
   line-height: 1.1;
   letter-spacing: -0.04em;
 }
+
+
+@keyframes scroll-left {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left {
+  animation: scroll-left 20s linear infinite;
+}

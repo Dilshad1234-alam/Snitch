@@ -1,26 +1,122 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate, Link } from 'react-router'
+import { useNavigate, Link, useLocation } from 'react-router'
 import { useAuth } from '../../auth/hook/useAuth'
+import { searchProductsApi } from '../../products/services/product.api'
 
 const Nav = () => {
     const navigate = useNavigate()
+    const location = useLocation()
+
     const user = useSelector(state => state.auth.user)
     const cartItems = useSelector(state => state.cart?.items)
     const wishlistItems = useSelector(state => state.wishlist?.items)
 
-    const { handleLogout } = useAuth()
+    const [search, setSearch] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const [isListening, setIsListening] = useState(false);
 
+    const { handleLogout } = useAuth()
 
     const logoutUser = async () => {
         await handleLogout();
         navigate("/login");
     };
 
+    useEffect(() => {
+        setSearch("");
+        setSuggestions([]);
+    }, [location.pathname]);
+
+
+    const handleSearchChange = async (e) => {
+        const value = e.target.value;
+        setSearch(value);
+
+        if (value.trim().length < 1) {
+            setSuggestions([]);
+            return;
+        }
+
+        const data = await searchProductsApi(value);
+        setSuggestions(data.products);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+
+        if (!search.trim()) return;
+
+        navigate(`/product?search=${search}`);
+        setSuggestions([]);
+    };
+
+    const handleVoiceSearch = () => {
+        const SpeechRecognition =
+            window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+            alert("Voice search is not supported in this browser");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+
+        recognition.lang = "en-IN";
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        setIsListening(true);
+        recognition.start();
+
+        recognition.onresult = async (event) => {
+            const voiceText = event.results[0][0].transcript;
+
+            setSearch(voiceText);
+
+            const data = await searchProductsApi(voiceText);
+
+            setSuggestions(data.products);
+        };
+
+        recognition.onerror = () => {
+            setIsListening(false);
+        };
+
+        recognition.onend = () => {
+            setIsListening(false);
+        };
+    };
+
     return (
         <nav className="px-8 lg:px-16 xl:px-24 pt-10 pb-6 flex items-center justify-between border-b" style={{ borderColor: '#C9A96E' }}>
 
             <div className="flex items-center gap-8">
+
+            <button
+                onClick={() => {
+                    navigate(-1)
+                    setSearch("");
+                    setSuggestions([]);
+                }}
+                className="flex items-center justify-center hover:text-[#C9A96E] transition-colors"
+                style={{ color: "#7A6E63" }}
+            >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            >
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+            </svg>
+            </button>
 
             <Link to="/"
                 className="text-sm font-medium tracking-[0.35em] uppercase hover:opacity-80 transition-opacity"
@@ -36,12 +132,78 @@ const Nav = () => {
                 Home
             </Link>
 
-            <Link to="/"
+            <Link to="/product"
                 className="text-[10px] uppercase tracking-[0.2em] font-medium hover:text-[#C9A96E]"
                 style={{ color: '#7A6E63' }}
             >
                 Product
             </Link>
+
+            {/* Search From */}
+
+            <form onSubmit={handleSearchSubmit} className="relative">
+                <input
+                    type="text"
+                    value={search}
+                    onChange={handleSearchChange}
+                    placeholder="Search..."
+                    className="w-56 border px-3 py-2 text-[10px] uppercase tracking-[0.15em] outline-none"
+                    style={{
+                        borderColor: "#C9A96E",
+                        backgroundColor: "transparent",
+                        color: "#1b1c1a"
+                    }}
+                />
+
+                <button
+                    type="button"
+                    onClick={handleVoiceSearch}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 hover:text-[#C9A96E] transition-colors"
+                    style={{
+                        color: isListening ? "#C9A96E" : "#7A6E63"
+                    }}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M12 1v11" />
+                        <rect x="8" y="1" width="8" height="14" rx="4" />
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                        <line x1="12" y1="19" x2="12" y2="23" />
+                        <line x1="8" y1="23" x2="16" y2="23" />
+                    </svg>
+                </button>
+
+                {suggestions.length > 0 && (
+                    <div
+                        className="absolute top-full left-0 w-72 bg-white border z-50 mt-1"
+                        style={{ borderColor: "#C9A96E" }}
+                    >
+                    {suggestions.map(product => (
+                        <div
+                            key={product._id}
+                            onClick={() => {
+                                setSearch(product.title);
+                                setSuggestions([]);
+                                navigate(`/product/${product._id}`);
+                            }}
+                            className="px-3 py-2 text-xs cursor-pointer hover:bg-[#fbf9f6]"
+                            style={{ color: "#1b1c1a" }}
+                        >
+                            {product.title}
+                        </div>
+                    ))}
+                </div>
+                )}
+            </form>
 
             </div>    
 

@@ -24,38 +24,23 @@ const CategoryProducts = () => {
     }, [category]);
 
     return (
-        <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-1 gap-y-8 pt-10" >
+        <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-x- gap-y-8 pt-10" >
 
             {products.map(product => (
 
+                <div key={product._id} className="group cursor-pointer flex flex-col max-w-[250px] mx-auto transition-transform duration-700 group-hover:scale-105" >
 
-                <div  
-                    key={product._id} 
-                    className="group cursor-pointer flex flex-col max-w-[280px] mx-auto" 
-                >
-
-                   {/* <div  className="aspect-[4/5] overflow-hidden mb-4"> */}
-
-                    <img 
-                        src={ product.images?.[0]?.url }
-                        alt=""
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {/* </div> */}
-
+                    <img src={ product.images?.[0]?.url } alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
 
                     <h2 
                         className="text-xl leading-snug transition-colors duration-300 group-hover:text-[#C9A96E]" 
-                        style={{
-                                fontFamily: "'Cormorant Garamond', serif",
-                                color: "#1b1c1a",
-                            }}
+                        style={{ fontFamily: "'Cormorant Garamond', serif", color: "#1b1c1a", }}
                     >
                         {product.title}
                     </h2>
 
 
-                    <p>
+                    <p style={{color: "#1b1c1a"}}>
                         ₹
                         {product.price?.amount}
                     </p>

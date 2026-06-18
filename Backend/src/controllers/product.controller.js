@@ -264,3 +264,39 @@ export const bulkUploadProducts = async (req, res) => {
     }
 };
 
+
+export const searchProducts = async (req, res) => {
+    try {
+        const { query } = req.query;
+
+        if (!query || query.trim() === "") {
+            return res.status(400).json({
+                success: false,
+                message: "Search query is required"
+            });
+        }
+
+        const products = await productModel
+            .find({
+                title: {
+                    $regex: query,
+                    $options: "i"
+                }
+            })
+            .select("title images price")
+            .limit(6);
+
+        res.status(200).json({
+            success: true,
+            products
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Search failed",
+            error: error.message
+        });
+    }
+};
+

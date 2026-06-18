@@ -29,7 +29,7 @@ const Wishlist = () => {
             {wishlistItems.length === 0 ? (
                 <p>Your wishlist is empty.</p>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
 
                     {wishlistItems.map((item) => (
                         <div key={item._id}

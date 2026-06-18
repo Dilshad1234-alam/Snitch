@@ -1,6 +1,6 @@
 import express from 'express'
 import { authenticateSeller } from '../middlewares/auth.middleware.js'
-import { createProduct, getAllProducts, getSellerProducts, getProductDetails, addProductVariant, getProductsByCategory, bulkUploadProducts } from '../controllers/product.controller.js'
+import { createProduct, getAllProducts, getSellerProducts, getProductDetails, addProductVariant, getProductsByCategory, bulkUploadProducts, searchProducts } from '../controllers/product.controller.js'
 import multer from 'multer'
 import { createProductValidator } from '../validator/product.validator.js'
 // import { bulkUploadProducts } from '../../../Frontend/Frontend/src/app/features/products/services/product.api.js'
@@ -42,6 +42,8 @@ router.get("/", getAllProducts )
 
 
 router.get("/category/:category", getProductsByCategory)
+
+router.get("/search", searchProducts)
 
 /**
  * @route GET /api/products/detail/:id
