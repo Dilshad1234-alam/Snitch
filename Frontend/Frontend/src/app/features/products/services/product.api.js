@@ -28,6 +28,14 @@ export async function getProductById(productId) {
     return response.data   
 }
 
+
+export async function searchProductsApi(query) {
+    const response = await productApiInstance.get(`/search?query=${query}`)
+
+    return response.data
+} 
+
+
 export async function addProductVariant(productId, newProductVariant) {
 
     const formData = new FormData()

@@ -1,156 +1,80 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { useProduct } from '../hooks/useProduct';
-import { Link } from 'react-router';
-import { useNavigate } from 'react-router';
+import React, {  useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const banners = [
+    { title: "", image: "https://ik.imagekit.io/Dilshad/snitch/1780900330.webp", path: "/category/shirt" },
+    { title: "", image: "https://ik.imagekit.io/Dilshad/snitch/1781006299.webp", path: "/category/tshirt" },
+    { title: "", image: "https://ik.imagekit.io/Dilshad/snitch/1780405487.webp", path: "/category/jeans" },
+    { title: "", image: "https://ik.imagekit.io/Dilshad/snitch/1780900372.webp", path: "/category/trousers" },
+    { title: "", image: "https://ik.imagekit.io/Dilshad/snitch/1781158057.webp", path: "/category/perfume" },
+    { title: "", image: "https://ik.imagekit.io/Dilshad/snitch/1780551455.webp", path: "/category/accessories" },
+];
+
+const sliderBanners = [...banners, ...banners];
 
 const Home = () => {
-    const products = useSelector(state => state.product.products);
-    const user = useSelector(state => state.auth.user);
-    const { handleGetAllProducts } = useProduct();
-
     const navigate = useNavigate();
 
-    useEffect(() => {
-        handleGetAllProducts();
-    }, []);
+    // const [slide, setSlide] = useState(0);
+
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setSlide(prev => (prev === 0 ? 1 : 0));
+    //     }, 8000);
+
+    //     return () => clearInterval(interval);
+    // }, []);
 
     return (
-        <>
-            {/* Google Fonts */}
-            <link
-                href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap"
-                rel="stylesheet"
-            />
-
-            <div
-                className="min-h-screen selection:bg-[#C9A96E]/30"
-                style={{ backgroundColor: '#fbf9f6', fontFamily: "'Inter', sans-serif" }}
-            >
-
-                {/* ── Topbar ── */}
+        <div className="min-h-screen flex flex-col bg-[#fbf9f6]">
+            <div className="max-w-[1550px] mx-auto h-[78vh] overflow-hidden  mt-10">
+                <div className="flex h-full gap-2 animate-scroll-left">
                 {/* <div
-                    className="w-full flex items-center justify-between px-8 lg:px-16 xl:px-24 py-6 border-b"
+                    className="flex h-full justify-center transition-transform duration-[3000ms] ease-in-out gap-2"
                     style={{
-                            borderColor: "#e4e2df",
-                            backgroundColor: "#fbf9f6"
+                        width: "200%",
+                        transform: `translateX(-${slide * 50}%)`,
                     }}
-                >
+                > */}
+                    {sliderBanners.map((item, index) => (
+                        <div
+                            key={index}
+                            onClick={() => navigate(item.path)}
+                            className="relative min-w-[32.8%] h-full overflow-hidden cursor-pointer group"
+                        >
+                            <img
+                                src={item.image}
+                                alt={item.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            />
 
-                <h1
-                    className="text-3xl"
+                            <div className="absolute inset-0 bg-black/20"></div>
+
+                            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center">
+                                <h2 className="text-white text-4xl font-semibold tracking-widest">
+                                    {item.title}
+                                </h2>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <footer
+                className="border-t py-12 text-center mt-auto"
+                style={{ borderColor: "#e4e2df" }}
+            >
+                <span
+                    className="text-[10px] uppercase tracking-[0.35em]"
                     style={{
                         fontFamily: "'Cormorant Garamond', serif",
-                        color: "#C9A96E"
+                        color: "#C9A96E",
                     }}
                 >
-                    SNITCH
-                </h1>
-
-
-                <span
-                    className="text-sm font-medium"
-                    style={{ color: "#1b1c1a" }}
-                >
-                    {user?.fullname || "Guest"}
+                    Snitch. © {new Date().getFullYear()}
                 </span>
-            </div> */}
-               
-
-                <div className="max-w-7xl mx-auto px-8 lg:px-16 xl:px-24">
-
-
-                    {/* ── Hero / Header ── */}
-                    <div className="pt-20 pb-20 text-center flex flex-col items-center">
-                        <span className="text-[10px] uppercase tracking-[0.24em] font-medium mb-6" style={{ color: '#C9A96E' }}>
-                            The Collection
-                        </span>
-                        <h1
-                            className="text-5xl lg:text-7xl font-light leading-tight mb-6"
-                            style={{ fontFamily: "'Cormorant Garamond', serif", color: '#1b1c1a' }}
-                        >
-                            Curated Archive
-                        </h1>
-                        <p className="max-w-xl mx-auto text-sm leading-relaxed" style={{ color: '#7A6E63' }}>
-                            Discover our latest curation of premium minimalist pieces, meticulously designed for effortless elegance and enduring quality.
-                        </p>
-                    </div>
-
-
-                    {/* ── Product Grid ── */}
-                    {products && products.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16 pb-32">
-                            {products.map(product => {
-                                const imageUrl = product.images && product.images.length > 0
-                                    ? product.images[ 0 ].url
-                                    : '/snitch_editorial_warm.png'; // Fallback
-
-                                return (
-                                    <div
-                                        onClick={() => navigate(`/product/${product._id}`)}
-                                        key={product._id} className="group cursor-pointer flex flex-col">
-                                            
-                                        {/* Image Container */}
-                                        <div className="aspect-[4/5] overflow-hidden mb-6" style={{ backgroundColor: '#f5f3f0' }}>
-                                            <img
-                                                src={imageUrl}
-                                                alt={product.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                                            />
-                                        </div>
-
-                                        {/* Product Details */}
-                                        <div className="flex flex-col gap-2">
-                                            <h3
-                                                className="text-xl leading-snug transition-colors duration-300 group-hover:text-[#C9A96E]"
-                                                style={{ fontFamily: "'Cormorant Garamond', serif", color: '#1b1c1a' }}
-                                            >
-                                                {product.title}
-                                            </h3>
-
-                                            <p
-                                                className="text-[12px] line-clamp-2 leading-relaxed"
-                                                style={{ color: '#7A6E63' }}
-                                            >
-                                                {product.description}
-                                            </p>
-
-                                            <div className="mt-2">
-                                                <span
-                                                    className="text-[10px] uppercase tracking-[0.2em] font-medium"
-                                                    style={{ color: '#1b1c1a' }}
-                                                >
-                                                    {product.price?.currency} {product.price?.amount?.toLocaleString()}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : (
-                        <div className="py-24 text-center flex flex-col items-center">
-                            <h2 className="text-2xl mb-4" style={{ fontFamily: "'Cormorant Garamond', serif", color: '#1b1c1a' }}>
-                                No pieces available.
-                            </h2>
-                            <p className="max-w-md mx-auto text-sm leading-relaxed" style={{ color: '#7A6E63' }}>
-                                We are currently preparing our next collection. Please check back later.
-                            </p>
-                        </div>
-                    )}
-                </div>
-
-                {/* ── Footer ── */}
-                <footer className="border-t py-12 text-center" style={{ borderColor: '#e4e2df' }}>
-                    <span
-                        className="text-[10px] uppercase tracking-[0.35em]"
-                        style={{ fontFamily: "'Cormorant Garamond', serif", color: '#C9A96E' }}
-                    >
-                        Snitch. © {new Date().getFullYear()}
-                    </span>
-                </footer>
-            </div>
-        </>
+            </footer>
+        </div>
     );
 };
 

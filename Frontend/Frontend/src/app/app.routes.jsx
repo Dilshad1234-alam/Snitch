@@ -12,6 +12,7 @@ import AppLayout from "./Applayout";
 import OrderSuccess from "./features/cart/pages/OrderSuccess";
 import Wishlist from "./features/wishlist/pages/Wishlist";
 import CategoryProducts from "./features/products/pages/CategoryProduct";
+import Product from "./features/products/pages/Product";
 
 export const routes = createBrowserRouter([
     {
@@ -29,6 +30,10 @@ export const routes = createBrowserRouter([
             {
                 path: "/",
                 element: <Home />,
+            },
+            {
+                path: "/product",
+                element: <Product />
             },
             {
                 path: "/category/:category",
