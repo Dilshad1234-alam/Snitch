@@ -30,6 +30,6 @@ export const validateDecrementCartQuantity = [
 
 export const validateRemoveCartItem = [
     param("productId").isMongoId().withMessage("Invalid product Id"),
-    param("varaintId").optional().isMongoId().withMessage("Invalid variant ID"),
+    param("variantId").optional().isMongoId().withMessage("Invalid variant Id"),
     validateRequest
 ]

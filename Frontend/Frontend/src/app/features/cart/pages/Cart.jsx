@@ -23,7 +23,9 @@ const tokens = {
 
 const Cart = () => {
     const cart = useSelector(state => state.cart)
-    console.log(cart.items[0]);
+    // console.log(cart.items[0]);
+
+    // console.log(cart.items[0]);
     
     const { handleGetCart, handleIncrementCartItemQuantity, handleDecrementCartItemQuantity, handleRemoveCartItem, handleCreateCartOrder, handleVerifyCartOrder } = useCart()
     const navigate = useNavigate()
@@ -45,10 +47,38 @@ const Cart = () => {
         }))
     }
     /* ─── Helpers ─── */
-    const getVariantDetails = (product, variantId) => {
-        if (!product?.variants || !variantId) return null
-        return product.variants
-    }
+    // const getVariantDetails = (product, variantId) => {
+    //     if (!product?.variants || !variantId) return null
+    //     return product.variants
+        
+    // }
+
+    /* ─── Helpers ─── */
+    const getVariantDetails = (product, variantId, itemPrice) => {
+
+        if (
+            product?.variants &&
+            Array.isArray(product.variants)
+        ) {
+            return (
+                product.variants.find(
+                    variant =>
+                        variant._id?.toString() ===
+                        variantId?.toString()
+                ) || {
+                    price: itemPrice,
+                    attributes: {},
+                    images: []
+                }
+            );
+        }
+
+        return {
+            price: itemPrice,
+            attributes: {},
+            images: []
+        };
+   };
 
     const getDisplayImage = (product, variant) => {
         if (variant?.images?.length) return variant.images[ 0 ].url
@@ -61,17 +91,17 @@ const Cart = () => {
 
 
     async function handleCheckout() {
-        const order = await handleCreateCartOrder()
-        console.log(order)
+        const data = await handleCreateCartOrder()
+        // console.log(data) 
 
 
         const options = {
-            key: "rzp_test_ShNSkpxt3emQVJ",
-            amount: order.amount, // Amount in paise
-            currency: order.currency,
+            key: "rzp_test_T3oO5VP5kJmL9k",
+            amount: data.order.amount, // Amount in paise
+            currency: data.order.currency,
             name: "Snitch",
             description: "Test Transaction",
-            order_id: order.id, // Generate order_id on server
+            order_id: data.order.id, // Generate order_id on server
             handler: async (response) => {
 
                 const isValid = await handleVerifyCartOrder(response)
@@ -83,7 +113,7 @@ const Cart = () => {
             prefill: {
                 name: user?.fullname,
                 email: user?.email,
-                contact: user?.contact,
+                // contact: user?.contact,
             },
             theme: {
                 color: tokens.primary,
@@ -107,7 +137,7 @@ const Cart = () => {
                     style={{ backgroundColor: tokens.surface, fontFamily: "'Inter', sans-serif" }}
                 >
                     {/* Nav */}
-                    <nav
+                    {/* <nav
                         className="px-8 lg:px-16 xl:px-24 pt-10 pb-6 flex items-center justify-between"
                         style={{ borderBottom: `1px solid ${tokens.surfaceHighest}` }}
                     >
@@ -125,7 +155,7 @@ const Cart = () => {
                         >
                             Return to Archive
                         </button>
-                    </nav>
+                    </nav> */}
 
                     <div className="flex-1 flex flex-col items-center justify-center gap-6 pb-24 px-8">
                         <p
@@ -209,11 +239,12 @@ const Cart = () => {
                             {/* ── Cart Item List ── */}
                             <div className="flex flex-col gap-6">
                                 {cart.items.map(item => {
-                                    const { product, variant: variantId, price, product: { _id } } = item
-                                    const variantDetail = getVariantDetails(product, variantId)
+                                    const { product, variant: variantId, price, selectedVariant } = item
+                                    const productId = product?._id;
+                                    const variantDetail = selectedVariant || getVariantDetails(product, variantId, price)
                                     const imageUrl = getDisplayImage(product, variantDetail)
                                     const displayPrice = price ?? variantDetail?.price ?? product?.price
-                                    const qty = quantities[ _id ] ?? item.quantity ?? 1
+                                    const qty = quantities[ item._id ] ?? item.quantity ?? 1
                                     const attributes = variantDetail?.attributes ?? {}
                                     const stock = variantDetail?.stock
                                     const variantPrice = variantDetail?.price
@@ -221,7 +252,7 @@ const Cart = () => {
 
                                     return (
                                         <div
-                                            key={_id}
+                                            key={item._id}
                                             className="flex gap-6 md:gap-8 p-6 md:p-8 transition-all duration-300"
                                             style={{ backgroundColor: tokens.surfaceLow }}
                                         >
@@ -275,7 +306,7 @@ const Cart = () => {
                                                                         color: '#fff',
                                                                     }}
                                                                 >
-                                                                    {val}
+                                                                    {key}: {val}
                                                                 </span>
                                                             ))}
                                                         </div>
@@ -320,8 +351,8 @@ const Cart = () => {
                                                         style={{ border: `1px solid ${tokens.outlineVariant}` }}
                                                     >
                                                         <button
-                                                            id={`qty-dec-${_id}`}
-                                                            onClick={() => handleDecrementCartItemQuantity({ productId: _id, variantId })}
+                                                            id={`qty-dec-${item._id}`}
+                                                            onClick={() => handleDecrementCartItemQuantity({ productId, variantId })}
                                                             className="w-9 h-9 flex items-center justify-center text-sm font-light transition-colors hover:opacity-60"
                                                             style={{ color: tokens.onSurface, borderRight: `1px solid ${tokens.outlineVariant}` }}
                                                             aria-label="Decrease quantity"
@@ -335,8 +366,8 @@ const Cart = () => {
                                                             {qty}
                                                         </span>
                                                         <button
-                                                            id={`qty-inc-${_id}`}
-                                                            onClick={() => handleIncrementCartItemQuantity({ productId: _id, variantId })}
+                                                            id={`qty-inc-${item._id}`}
+                                                            onClick={() => handleIncrementCartItemQuantity({ productId, variantId })}
                                                             className="w-9 h-9 flex items-center justify-center text-sm font-light transition-colors hover:opacity-60"
                                                             style={{ color: tokens.onSurface, borderLeft: `1px solid ${tokens.outlineVariant}` }}
                                                             aria-label="Increase quantity"
@@ -347,8 +378,8 @@ const Cart = () => {
 
                                                     {/* Remove */}
                                                     <button
-                                                        id={`remove-${_id}`}
-                                                        onClick={() => handleRemoveCartItem({ productId: _id, variantId })}
+                                                        id={`remove-${item._id}`}
+                                                        onClick={() => handleRemoveCartItem({ productId, variantId })}
                                                         className="text-[10px] uppercase tracking-[0.22em] font-medium transition-all duration-200 hover:underline hover:opacity-70"
                                                         style={{ color: tokens.muted }}
                                                     >

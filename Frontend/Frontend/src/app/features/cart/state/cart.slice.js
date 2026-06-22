@@ -9,9 +9,9 @@ const cartSlice = createSlice({
     },
     reducers: {
         setCart: (state, action) => {
-            state.items = action.payload.items
-            state.totalPrice = action.payload.totalPrice
-            state.currency = action.payload.currency
+            state.items = action.payload.items || []
+            state.totalPrice = action.payload.totalPrice || 0
+            state.currency = action.payload.currency || "INR"
         },
         addItem: (state, action) => {
             state.items.push(action.payload)
@@ -39,11 +39,12 @@ const cartSlice = createSlice({
         removeCartItem: (state, action) => {
             const { productId, variantId } = action.payload
 
-            state.items = state.items.filter(item => {
+            state.items = state.items.filter(item => 
                 !(
-                    item.product._id?.toString() === productId?.toString() && item.variant?.toString() === variantId?.toString()
+                    item.product._id?.toString() === productId?.toString() && 
+                    item.variant?.toString() === variantId?.toString()
                 )
-            })
+            )
         }
     }
 })

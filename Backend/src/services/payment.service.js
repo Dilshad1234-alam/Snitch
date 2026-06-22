@@ -2,17 +2,21 @@ import Razorpay from 'razorpay'
 import {  config} from '../config/config.js'
 
 const razorpay = new Razorpay({
-    key_id: config.REZORPAY_KEY_ID,
-    key_secret: config.REZORPAY_KEY_SECRET
+    key_id: config.RAZORPAY_KEY_ID,
+    key_secret: config.RAZORPAY_KEY_SECRET
 })
 
-export const createOrder = async (amount, currency = "INR") => {
+export const createOrder = async ({amount, currency = "INR"}) => {
+
     const options = {
-        amount: amount * 100, // Amount in paise
+        amount: Number(amount) * 100, // Amount in paise
         currency,
+        receipt: `receipt_${Date.now()}`
     }
 
-    const order = await razorpay.orders.create(options);
+    return await razorpay.orders.create(options)
 
-    return order;
+    // const order = await razorpay.orders.create(options);
+
+    // return order;
 };

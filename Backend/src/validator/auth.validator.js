@@ -35,6 +35,7 @@ export const validateLoginUser = [
         .isEmail().withMessage("Invaild email format"),
     body("password")
         .notEmpty().withMessage("Password is required"),
+        
     validateRequest
 ]
 

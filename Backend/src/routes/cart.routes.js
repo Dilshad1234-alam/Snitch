@@ -5,6 +5,19 @@ import { addToCart, createOrderController, getCart, incrementCartItemQuantity, v
 
 const router = express.Router();
 
+console.log("CART ROUTES FILE LOADED");
+
+/**
+ * @route POST /api/cart/payment/create/order
+ */
+
+router.post("/payment/create/order", authenticateUser, (req, res, next) => {
+    console.log("PAYMENT CREATE ROUTE HIT")
+    next()
+}, createOrderController)
+
+
+router.post("/payment/verify/order", authenticateUser, verifyOrderController)
 
 /**
  * @route POST /api/cart/add/:productId/:variantId
@@ -24,12 +37,14 @@ router.post("/add/:productId/:variantId", authenticateUser, validateAddToCart, a
  */
 router.get('/', authenticateUser, getCart)
 
+
 /**
  * @route PATCH /api/cart/quantity/increment/:productId/:variantId
  * @desc Increment item quantity in cart by one
  * @access Private
  */
 router.patch('/quantity/increment/:productId/:variantId', authenticateUser, validateIncrementCartQuantity, incrementCartItemQuantity);
+
 
 /**
  * @route PATCH /api/cart/quantity/decrement/:productId/:variantId
@@ -38,15 +53,8 @@ router.patch('/quantity/increment/:productId/:variantId', authenticateUser, vali
  */
 router.patch('/quantity/decrement/:productId/:variantId', authenticateUser, validateDecrementCartQuantity, decrementCartItemQuantity );
 
+
 router.delete("/remove/:productId/:variantId", authenticateUser, validateRemoveCartItem, removeCartItem)
 
-/**
- * @route POST /api/cart/payment/create/order
- */
-
-router.post("/payment/create/order", authenticateUser, createOrderController)
-
-
-router.post("/payment/verify/order", authenticateUser, verifyOrderController)
 
 export default router

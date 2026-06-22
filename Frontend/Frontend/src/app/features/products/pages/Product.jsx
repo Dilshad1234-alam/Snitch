@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useProduct } from "../hooks/useProduct";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import CategoryBar from "../components/CategoryBar";
+import Footer from "../components/Footer";
 
 const Product = () => {
     const products = useSelector(state => state.product.products);
@@ -113,14 +114,7 @@ const Product = () => {
             </div>
 
             {/* ── Footer ── */}
-                <footer className="border-t py-12 text-center" style={{ borderColor: '#e4e2df' }}>
-                    <span
-                        className="text-[10px] uppercase tracking-[0.35em]"
-                        style={{ fontFamily: "'Cormorant Garamond', serif", color: '#C9A96E' }}
-                    >
-                        Snitch. © {new Date().getFullYear()}
-                    </span>
-                </footer>
+                <Footer />
         </div>
     );
 };

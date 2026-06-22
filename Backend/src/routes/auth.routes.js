@@ -8,9 +8,10 @@ import { authenticateUser } from '../middlewares/auth.middleware.js';
 
 const router = Router()
 
-
+// /api/auth/register
 router.post('/register', validateRegisterUser, register )
 
+// /api/auth/login
 router.post("/login", validateLoginUser, login )
 
 

@@ -1,22 +1,21 @@
 import { useSelector } from "react-redux";
 import { useWishlist } from "../hook/useWishlist";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const Wishlist = () => {
-    const wishlistItems = useSelector( (state) => state.wishlist.items );
-    console.log(wishlistItems);
-    
-
+    const wishlistItems = useSelector((state) => state.wishlist.items);
     const { handleGetWishlist, handleRemoveWishlist } = useWishlist();
+    const navigate = useNavigate();
 
     useEffect(() => {
         handleGetWishlist();
     }, []);
 
     return (
-        <div className="px-8 lg:px-16 py-10">
+        <div className="min-h-screen bg-[#fbf9f6] px-4 sm:px-8 lg:px-16 py-8 sm:py-10">
             <h1
-                className="text-3xl mb-8"
+                className="text-2xl sm:text-3xl mb-6 sm:mb-8"
                 style={{
                     fontFamily: "'Cormorant Garamond', serif",
                     color: "#1b1c1a",
@@ -25,64 +24,83 @@ const Wishlist = () => {
                 Wishlist
             </h1>
 
-
             {wishlistItems.length === 0 ? (
-                <p>Your wishlist is empty.</p>
+                <p className="text-sm text-[#7A6E63]">
+                    Your wishlist is empty.
+                </p>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-6">
+                    {wishlistItems.map((item) => {
+                        const imageUrl =
+                            item.selectedVariant?.images?.[0]?.url ||
+                            item.product?.images?.[0]?.url ||
+                            "/snitch_editorial_warm.png";
 
-                    {wishlistItems.map((item) => (
-                        <div key={item._id}
-                            className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
-                        >
-                            <img
-                                src={
-                                    item.selectedVariant?.images?.[0]?.url ||
-                                    item.product?.images?.[0]?.url
-                                    // "https://via.placeholder.com/300x400?text=No+Image"
-                                }
-                                alt={item.product?.title || "Product"}
-                                className="w-full h-82 object-cover"
-                            />
-
-                            <div className="p-4">
-                                <h3
-                                    className="text-lg font-medium"
-                                    style={{
-                                        fontFamily:
-                                            "'Cormorant Garamond', serif",
-                                        color: "#1b1c1a",
+                        return (
+                            <div
+                                key={item._id}
+                                className="border bg-white overflow-hidden shadow-sm hover:shadow-md active:scale-95 transition-all duration-300"
+                            >
+                                <div
+                                    onClick={() => {
+                                        if (item.product?._id) {
+                                            navigate(`/product/${item.product._id}`);
+                                        }
                                     }}
+                                    className="cursor-pointer"
                                 >
-                                    {item.product?.title}
-                                </h3>
+                                    <img
+                                        src={imageUrl}
+                                        alt={item.product?.title || "Product"}
+                                        className="w-full aspect-[4/5] object-cover"
+                                    />
+                                </div>
 
-                                <p
-                                    className="mt-2"
-                                    style={{
-                                        fontFamily:
-                                            "'Cormorant Garamond', serif",
-                                        color: "#1b1c1a",
-                                    }}
-                                >
-                                    ₹{item.selectedVariant?.price?.amount || item.product?.price?.amount}
-                                </p>
-                                <button
-                                    onClick={() =>{
-                                        if (!item.product) return;
+                                <div className="p-2 sm:p-4">
+                                    <h3
+                                        onClick={() => {
+                                            if (item.product?._id) {
+                                                navigate(`/product/${item.product._id}`);
+                                            }
+                                        }}
+                                        className="text-sm sm:text-lg font-medium line-clamp-2 cursor-pointer hover:text-[#C9A96E]"
+                                        style={{
+                                            fontFamily: "'Cormorant Garamond', serif",
+                                            color: "#1b1c1a",
+                                        }}
+                                    >
+                                        {item.product?.title}
+                                    </h3>
 
-                                        handleRemoveWishlist({
-                                            productId: item.product._id,
-                                            variantId: item.variant
-                                        })
-                                    }}
-                                    className="mt-3 bg-red-500 text-white px-3 py-2 rounded"
-                                >
-                                   Remove
-                                </button>
+                                    <p
+                                        className="mt-1 sm:mt-2 text-xs sm:text-base"
+                                        style={{
+                                            fontFamily: "'Cormorant Garamond', serif",
+                                            color: "#1b1c1a",
+                                        }}
+                                    >
+                                        ₹{" "}
+                                        {item.selectedVariant?.price?.amount ||
+                                            item.product?.price?.amount}
+                                    </p>
+
+                                    <button
+                                        onClick={() => {
+                                            if (!item.product) return;
+
+                                            handleRemoveWishlist({
+                                                productId: item.product._id,
+                                                variantId: item.variant,
+                                            });
+                                        }}
+                                        className="mt-3 w-full bg-red-500 text-white px-2 sm:px-3 py-2 rounded text-xs sm:text-sm active:scale-95 transition"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
         </div>

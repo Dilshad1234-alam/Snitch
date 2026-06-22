@@ -10,7 +10,7 @@ const paymentSchema = new mongoose.Schema({
         default: 'pending'
     },
     price: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: priceSchema,
         required: true,
     },
     razorpay: {

@@ -5,3 +5,106 @@ Xf0KO3WoWLahadIxOSK9Qcj - rezorpay_SECRET
 git add .
 git commit -m "Added product dashboard"
 git push
+
+
+// export const createOrderController = async (req, res) => {
+
+
+
+//     const cart = await getCartDetails(req.user._id)
+
+
+
+//     if (!cart) {
+
+//         return res.status(404).json({
+
+//             message: "Cart not found",
+
+//             success: false
+
+//         })
+
+//     }
+
+
+
+//     // const order = await createOrder({ amount: cart.totalPrice, currency: cart.currency })
+
+
+
+//     const order = await createOrder({
+
+//         amount: totalPrice,
+
+//         currency: "INR"
+
+//     });
+
+
+
+//     console.log("cart =", cart);
+
+//     console.log("totalPrice =", cart.totalPrice);
+
+//     console.log("currency =", cart.currency);
+
+
+
+//     const payment = await paymentModel.create({
+
+//         user: req.user._id,
+
+//         razorpay: {
+
+//             orderId: order.id,
+
+//         },
+
+//         price: {
+
+//             amount: cart.totalPrice,
+
+//             currency: cart.currency
+
+//         },
+
+//         orderItems: cart.items.map(item => ({
+
+//             title: item.product.title,
+
+//             productId: item.product._id,
+
+//             variantId: item.variant,
+
+//             quantity: item.quantity,
+
+//             images: item.product.variant.images || item.product.images,
+
+//             description: item.product.description,
+
+//             price: {
+
+//                 amount: item.product.variant.price.amount || item.product.price.amount,
+
+//                 currency: item.product.variant.price.currency || item.product.price.currency
+
+//             }
+
+//         }))
+
+//     })
+
+
+
+//     return res.status(200).json({
+
+//         message: "Order created successfully",
+
+//         success: true,
+
+//         order
+
+//     })
+
+// }

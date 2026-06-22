@@ -118,3 +118,13 @@ input:focus, textarea:focus, select:focus {
 .animate-scroll-left {
   animation: scroll-left 20s linear infinite;
 }
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

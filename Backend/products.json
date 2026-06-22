@@ -50,6 +50,40 @@
       }
     ]
   },
+  {
+    "title": "Cotton Regular Fit Shirt",
+    "category": "shirt",
+    "description": "Premium cotton black shirt",
+    "price": {
+      "amount": 999,
+      "currency": "INR"
+    },
+    "images": [
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/3_b49e57ad-b9be-4181-b3a0-18eb5e222355_HNS8dghCAp.webp?updatedAt=1780996113371" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/2_cf0f36e2-c226-4af6-a408-15c6dc70fdad_5uctYLJelG.webp?updatedAt=1780996113029" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/1_6094dc66-6601-4145-9c1b-59eff863782b_rCvRCt2h38.webp?updatedAt=1780996113113" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/5_50ae4db7-8823-4a67-a249-6f1dc6fe996b_giN-q4idt.webp?updatedAt=1780996113165" }
+    ],
+    "variants":[
+      {
+        "stock": 20,
+        "attributes": {
+          "size": "S",
+          "color": "Purple"
+        },
+        "price": {
+          "amount": 999,
+          "currency": "INR"
+        },
+        "images": [
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/3_b49e57ad-b9be-4181-b3a0-18eb5e222355_HNS8dghCAp.webp?updatedAt=1780996113371" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/2_cf0f36e2-c226-4af6-a408-15c6dc70fdad_5uctYLJelG.webp?updatedAt=1780996113029" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/1_6094dc66-6601-4145-9c1b-59eff863782b_rCvRCt2h38.webp?updatedAt=1780996113113" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/5_50ae4db7-8823-4a67-a249-6f1dc6fe996b_giN-q4idt.webp?updatedAt=1780996113165" }
+        ]
+      }
+    ]
+  },
 
   {
     "title": "Classic White Shirt",
@@ -308,7 +342,7 @@
   },
 
   {
-    "title": "Formal Trousers",
+    "title": "Linen Trousers",
     "category": "trousers",
     "description": "Office wear trousers",
     "price": {
@@ -316,10 +350,10 @@
       "currency": "INR"
     },
     "images": [
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/3_69640cca-187c-4081-8fac-0c180fd75515_46SdGi2CS.webp?updatedAt=1781455327414" },
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/4_72a88bb3-2e45-4141-a062-b3482a4bd0c4_3oJQ00-Is.webp?updatedAt=1781455327273" },
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/2_ad9b6edb-aa7d-403b-a695-afbed3861732_67-xVI5kB.webp?updatedAt=1781455327173" },
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/1_77bafd80-933d-40c4-8276-3c2162235824_CMFVEQWZu.webp?updatedAt=1781455327013" }
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_3.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_4.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_2.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_2.webp" }
     ],
     "variants": [
       {
@@ -333,27 +367,27 @@
           "currency": "INR"
         },
         "images": [
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/3_69640cca-187c-4081-8fac-0c180fd75515_46SdGi2CS.webp?updatedAt=1781455327414" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/4_72a88bb3-2e45-4141-a062-b3482a4bd0c4_3oJQ00-Is.webp?updatedAt=1781455327273" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/2_ad9b6edb-aa7d-403b-a695-afbed3861732_67-xVI5kB.webp?updatedAt=1781455327173" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/1_77bafd80-933d-40c4-8276-3c2162235824_CMFVEQWZu.webp?updatedAt=1781455327013" }
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_3.webp" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_4.webp" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_2.webp" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-04_2.webp" }
         ]
       },
       {
         "stock": 20,
         "attributes": {
           "size": "32",
-          "color": "White"
+          "color": "Maroon"
         },
         "price": {
           "amount": 1299,
           "currency": "INR"
         },
         "images": [
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/2_d756ef65-c4fc-4f9f-a622-a637cebc98c9_dxm6e1-W3.webp?updatedAt=1781280701487" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/3_5ffddad4-fdd5-4b04-a3f9-dff3fbef69f8_dqYfuJ1QG-.webp?updatedAt=1781280701430" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/1_a124e671-2b81-480a-b54f-709eafba7c94_bFSsN4nXh.webp?updatedAt=1781280701394" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/4_46fb6b7a-21c4-4b26-a5da-f972b19d3991_uUM5mP696.webp?updatedAt=1781280701402" }
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-01_3.webp" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-01_1.webp" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-01_2.webp" },
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/4msr5516-01_4.webp" }
         ]
       }
     ]
@@ -368,10 +402,10 @@
       "currency": "INR"
     },
     "images": [
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/2_d4112efe-818d-422e-81e5-69e269c1c350_wtPpv5vyO.webp?updatedAt=1781258463397" },
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/1_0a8e63f2-80b2-42ee-947b-6498a738d22d_hFAqcvD-39.webp?updatedAt=1781258463392" },
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/3_2bce0bff-285b-47ca-9fbf-d1d434cc113f_7X5cH9Otu.webp?updatedAt=1781258463495" },
-      { "url": "https://ik.imagekit.io/Dilshad/snitch/4_4631921c-fca9-4fe0-af90-35815b3e18e8_edGJnibqw.webp?updatedAt=1781258463356" }
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/2_d4112efe-818d-422e-81e5-69e269c1c350.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/1_0a8e63f2-80b2-42ee-947b-6498a738d22d.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/3_2bce0bff-285b-47ca-9fbf-d1d434cc113f.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/4_4631921c-fca9-4fe0-af90-35815b3e18e8.webp" }
     ],
     "variants": [
       {
@@ -385,10 +419,10 @@
           "currency": "INR"
         },
         "images": [
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/2_d4112efe-818d-422e-81e5-69e269c1c350_wtPpv5vyO.webp?updatedAt=1781258463397" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/1_0a8e63f2-80b2-42ee-947b-6498a738d22d_hFAqcvD-39.webp?updatedAt=1781258463392" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/3_2bce0bff-285b-47ca-9fbf-d1d434cc113f_7X5cH9Otu.webp?updatedAt=1781258463495" },
-          { "url": "https://ik.imagekit.io/Dilshad/snitch/4_4631921c-fca9-4fe0-af90-35815b3e18e8_edGJnibqw.webp?updatedAt=1781258463356" }
+          { "url": "https://ik.imagekit.io/Dilshad/snitch/2_d4112efe-818d-422e-81e5-69e269c1c350.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/1_0a8e63f2-80b2-42ee-947b-6498a738d22d.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/3_2bce0bff-285b-47ca-9fbf-d1d434cc113f.webp" },
+      { "url": "https://ik.imagekit.io/Dilshad/snitch/4_4631921c-fca9-4fe0-af90-35815b3e18e8.webp" }
         ]
       },
       {

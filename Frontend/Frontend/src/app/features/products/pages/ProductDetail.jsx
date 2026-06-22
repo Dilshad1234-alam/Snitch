@@ -337,7 +337,7 @@ const ProductDetail = () => {
                             {/* Actions */}
                             <div className="flex flex-col gap-4 mt-auto">
                                 <button
-                                    className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300"
+                                    className="group w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium active:scale-95 transition-all duration-300 hover:bg-[#C9A96E] hover:text-[#1b1c1a]300"
                                     style={{
                                         backgroundColor: '#1b1c1a',
                                         color: '#fbf9f6',
@@ -362,7 +362,7 @@ const ProductDetail = () => {
                                 </button>
 
                                 <button
-                                    className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-all duration-300 border"
+                                    className="w-full py-4 text-[11px] uppercase tracking-[0.25em] font-medium active:scale-95 transition-all duration-300 border"
                                     style={{
                                         backgroundColor: 'transparent',
                                         borderColor: '#d0c5b5',

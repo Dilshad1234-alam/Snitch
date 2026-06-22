@@ -28,6 +28,13 @@ export async function getCartDetails(userId) {
             }
           }
         },
+
+        {
+          $addFields: {
+            "items.selectedVariant": "$items.product.variants",
+          },
+        },
+        
         {
           $addFields: {
             itemsPrice: {

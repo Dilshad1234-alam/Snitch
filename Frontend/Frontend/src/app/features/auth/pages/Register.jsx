@@ -5,6 +5,7 @@ import ContinueWithGoogle from "../components/ContinueWithGoogle.jsx";
 
 const Register = () => {
   const { handleRegister } = useAuth();
+  
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
