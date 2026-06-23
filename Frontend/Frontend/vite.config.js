@@ -15,6 +15,11 @@ export default defineConfig(({ mode }) => {
           secure: false
         }
       }
+    },
+
+    preview: {
+      allowedHosts: true,
+      host: "0.0.0.0"
     }
   }
 })
