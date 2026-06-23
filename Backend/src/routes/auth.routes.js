@@ -16,14 +16,19 @@ router.post("/login", validateLoginUser, login )
 
 
 // /api/auth/google
-router.get("/google",
-    passport.authenticate("google", { scope: [ "profile", "email" ] })
-)
+router.get("/google", (req, res, next) => {
+    const redirect = req.query.redirect || "/";
+
+    passport.authenticate("google", {
+        scope: ["profile", "email"],
+        state: redirect
+    })(req, res, next);
+});
 
 router.get("/google/callback", 
     passport.authenticate("google", { 
         session: false,
-        failureRedirect: config.NODE_ENV == "development" ? "http://localhost:5173/login" : "/login"
+        failureRedirect: config.NODE_ENV == "production" ? `${config.FRONTEND_URL}` : "/login"
     }),
     googleCallback,
 )

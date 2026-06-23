@@ -121,7 +121,8 @@ export const googleCallback = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
-    res.redirect(config.FRONTEND_URL)
+    const redirectPath = req.query.state || "/";
+    res.redirect(`${config.FRONTEND_URL}${redirectPath}`)
     
 }
 
