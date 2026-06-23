@@ -64,3 +64,6 @@ export const config = {
 }
 
 
+console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
+console.log("GOOGLE_CLIENT_SECRET EXISTS:", !!process.env.GOOGLE_CLIENT_SECRET);
+console.log("NODE_ENV:", process.env.NODE_ENV);
