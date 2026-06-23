@@ -17,7 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-    origin: ["http://localhost:5173",config.FRONTEND_URL],
+    origin: ["http://localhost:5173",
+      "https://amiable-energy-production-d413.up.railway.app",
+      config.FRONTEND_URL
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }))
