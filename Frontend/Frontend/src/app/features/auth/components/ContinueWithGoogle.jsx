@@ -3,7 +3,7 @@ import React from "react";
 const ContinueWithGoogle = () => {
   return (
     <a
-      href="/api/auth/google"
+      href={`${import.meta.env.VITE_BACKEND_URL}/api/auth/google`}
       className="flex items-center justify-center w-full bg-[#131314] hover:bg-[#202124] text-[#e3e3e3] font-medium py-2 rounded-[4px] transition-all duration-200 border border-[#747775] text-sm relative"
       style={{
         fontFamily: "'Roboto', arial, sans-serif",
